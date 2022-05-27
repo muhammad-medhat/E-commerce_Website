@@ -1,11 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { updateUser } = require("../controllers/userController");
 
-/* 
-!Example route
-router.get("/", (req, res) => {
-     res.status(200).json({ message: "Hello World" });
-})
-*/
-
+router.put("/:id", updateUser);
 module.exports = router;
