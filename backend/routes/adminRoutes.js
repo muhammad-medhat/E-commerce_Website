@@ -6,10 +6,10 @@ const {
   getAllUsers,
   updateUserPassword,
 } = require("../controllers/adminController");
-//const { verifyAuth } = require("../middleware/authMiddleware");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/login", loginAdmin);
-router.get("/logout", logoutAdmin);
-router.get("/users/all", getAllUsers);
-router.post("/users/password", updateUserPassword);
+router.get("/logout",verifyAdmin, logoutAdmin);
+router.get("/users/all", verifyAdmin, getAllUsers);
+router.put("/users/password", verifyAdmin, updateUserPassword);
 module.exports = router;

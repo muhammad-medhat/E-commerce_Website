@@ -9,10 +9,10 @@ const {
 } = require("../controllers/userController");
 const { verifyAuth } = require("../middleware/authMiddleware");
 
-router.post("/", regUser);
+router.post("/register", regUser);
 router.get("/user", verifyAuth, getUser);
-router.put("/user", verifyAuth, updateUser);
-router.get("/logout", logoutUser);
+router.put("/user/update", verifyAuth, updateUser);
+router.get("/logout",verifyAuth, logoutUser);
 router.post("/login", loginUser);
 
 module.exports = router;

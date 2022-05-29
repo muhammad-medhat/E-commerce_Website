@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const Admin = require("../model/adminModel");
 const User = require("../model/userModel");
 
-// Admin log in
+// @desc    Admin log in
+// @route   POST /api/admin/login
+// @access  Public
 
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -29,8 +31,10 @@ const loginAdmin = asyncHandler(async (req, res) => {
     throw new Error("Invalid admin email or password");
   }
 });
+// @desc    Admin log out
+// @route   GET /api/admin/logout
+// @access  Private
 
-// logout the admin
 const logoutAdmin = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/");
@@ -43,14 +47,19 @@ const generateToken = (id) => {
     expiresIn: maxAge,
   });
 };
+// @desc    GET all Users
+// @route   Get /api/admin/users/all
+// @access  Private
 
-// GET all Users
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
   res.status(200).json({ users });
 });
 
-// POST new user password
+// @desc    new user password
+// @route   PUT /api/admin/users/password
+// @access  Private
+
 const updateUserPassword = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });

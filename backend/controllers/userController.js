@@ -4,6 +4,11 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const User = require("../model/userModel");
 
+
+// @desc    user can update its account data
+// @route   PUT /api/users/user/update
+// @access  Private
+
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
   if (!user) {
@@ -57,7 +62,10 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Register User with POST route
+// @desc    Register User
+// @route   POST /api/users/register
+// @access  Public
+
 const regUser = asyncHandler(async (req, res) => {
   const { username, password, email } = req.body;
 
@@ -100,7 +108,10 @@ const regUser = asyncHandler(async (req, res) => {
   }
 });
 
-// GET a user
+
+// @desc    GET a user
+// @route   GET /api/users/user
+// @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
   const { _id, username, email } = await User.findById(req.user.id);
@@ -110,6 +121,10 @@ const getUser = asyncHandler(async (req, res) => {
     email,
   });
 });
+
+// @desc    login a user
+// @route   POST /api/users/login
+// @access  Public
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -135,7 +150,10 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// log out users
+
+// @desc    logout a user
+// @route   GET /api/users/logout
+// @access  Private
 
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });
