@@ -5,7 +5,7 @@ const {
   logoutAdmin,
   getAllUsers,
   updateUserPassword,
-} = require("../controllers/adminControllers");
+} = require("../controllers/adminController");
 //const { verifyAuth } = require("../middleware/authMiddleware");
 
 router.post("/login", loginAdmin);
