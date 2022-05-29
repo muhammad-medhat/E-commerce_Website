@@ -111,6 +111,30 @@ const getUser = asyncHandler(async (req, res) => {
   });
 });
 
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check for user email
+  const user = await User.findOne({ email });
+  // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
+  if (user && (await bcrypt.compare(password, user.password))) {
+    const token = generateToken(user._id);
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+    });
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid credentials");
+  }
+});
+
 // log out users
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -126,4 +150,4 @@ const generateToken = (id) => {
   });
 };
 
-module.exports = { updateUser, regUser, getUser, logoutUser };
+module.exports = { updateUser, regUser, getUser, logoutUser, loginUser };
