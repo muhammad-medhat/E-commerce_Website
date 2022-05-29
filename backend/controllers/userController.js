@@ -5,8 +5,7 @@ const mongoose = require("mongoose");
 const User = require("../model/userModel");
 
 const updateUser = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const user = await User.findById(id);
+  const user = await User.findById(req.user.id);
   if (!user) {
     res.status(400);
     throw new Error("User not found");
@@ -21,7 +20,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
   if (username) {
     let updatedUser = await User.findByIdAndUpdate(
-      id,
+      req.user.id,
       { username },
       { new: true }
     );
@@ -29,7 +28,7 @@ const updateUser = asyncHandler(async (req, res) => {
   } else if (email) {
     if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
-        id,
+        req.user.id,
         { email },
         { new: true }
       );
@@ -44,7 +43,7 @@ const updateUser = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
-        id,
+        req.user.id,
         {
           password: hashedPassword,
         },
