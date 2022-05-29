@@ -82,6 +82,11 @@ const user = await User.create({
 })
 
 if(user){
+  const token = generateToken(user._id);
+    res.cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: maxAge * 1000,
+      });
   res.status(201).json({
     _id:user.id,
     username:user.username,
@@ -106,16 +111,24 @@ if(user){
    })
  });
 
+// log out users 
+
+const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie('jwt', '', { maxAge: 1 });
+  res.redirect('/')
+});
 
 // Generate JWT token
+const maxAge = 3 * 24 * 60 * 60;
 const generateToken = (id) => {
   return jwt.sign({id},process.env.TOKEN_SECRET,{
-    expiresIn:'30d',
+    expiresIn: maxAge,
   })
 }; 
 
 
 module.exports = { updateUser,
   regUser,
-  getUser
+  getUser, 
+  logoutUser
  };
