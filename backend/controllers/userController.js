@@ -27,7 +27,7 @@ const updateUser = asyncHandler(async (req, res) => {
     );
     res.status(200).json(updatedUser);
   } else if (email) {
-    if (user.password === password) {
+    if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
         id,
         { email },
@@ -42,7 +42,7 @@ const updateUser = asyncHandler(async (req, res) => {
     // Encrypting password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    if (user.password === password) {
+    if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
         id,
         {
