@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", async (req, res) => {
   res.status(200).json({ message: "Hello World" });
 });
+app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/category", require("./routes/categoryRoutes"));
