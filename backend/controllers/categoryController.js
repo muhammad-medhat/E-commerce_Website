@@ -34,5 +34,48 @@ const createCategory = asyncHandler(async (req, res) => {
       throw new Error("Invalid category data");
     }
   });
- 
-  module.exports = { createCategory };
+
+// @desc    get all Category 
+// @route   GET /api/category/view
+// @access  Private
+
+const viewCategory = asyncHandler(async (req, res) => {
+  const categories = await Category.find();
+  res.status(200).json({ categories });
+});
+
+// @desc    Delete Category 
+// @route   DELETE /api/category/delete/:id
+// @access  Private
+
+const deleteCategory = asyncHandler(async (req, res) => {
+
+  const category = await Category.findById(req.params.id);
+  
+  if (!category) {
+    res.status(400);
+    throw new Error("category not found");
+  }
+    await Category.findByIdAndDelete(req.params.id);
+    res.status(201).json({
+      id: category.id,
+    });  
+});
+
+// @desc    update Category 
+// @route   PUT /api/category/update/:id
+// @access  Private
+
+const updateCategory = asyncHandler(async (req, res) => {
+  const category = await Category.findById(req.params.id);
+
+  if(!category){
+    res.status(400);
+    throw new Error(`Category not found`);
+  }
+
+  const updatedCategory = await Category.findByIdAndUpdate(req.params.id , req.body, { new: true, });
+  res.status(200).json(updatedCategory);
+})
+
+  module.exports = { createCategory, viewCategory , deleteCategory, updateCategory };
