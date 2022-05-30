@@ -15,7 +15,7 @@ const productSchema = mongoose.Schema({
     require: true,
     ref: "Brand",
   },
-  quantity: { type: Number, require: true },
+  quantityInStock: { type: Number, require: true },
 });
 
 module.exports = mongoose.model("Product", productSchema);
