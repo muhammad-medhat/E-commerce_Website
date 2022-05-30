@@ -85,11 +85,17 @@ const changeUserStatus = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid user email");
   } else {
-    await User.findByIdAndUpdate(user._id, { status });
+    await User.findByIdAndUpdate(user.id, { status });
     res
       .status(200)
       .json({ message: `Status updated successfully to ${status}` });
   }
 });
 
-module.exports = { loginAdmin, logoutAdmin, getAllUsers, updateUserPassword };
+module.exports = {
+  loginAdmin,
+  logoutAdmin,
+  getAllUsers,
+  updateUserPassword,
+  changeUserStatus,
+};
