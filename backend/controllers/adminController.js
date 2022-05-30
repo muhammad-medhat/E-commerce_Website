@@ -75,4 +75,21 @@ const updateUserPassword = asyncHandler(async (req, res) => {
   }
 });
 
+// @description Update User State
+// @route POST /api/admin/users/status
+// @access Private
+const changeUserStatus = asyncHandler(async (req, res) => {
+  const { email, status } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(400);
+    throw new Error("Invalid user email");
+  } else {
+    await User.findByIdAndUpdate(user._id, { status });
+    res
+      .status(200)
+      .json({ message: `Status updated successfully to ${status}` });
+  }
+});
+
 module.exports = { loginAdmin, logoutAdmin, getAllUsers, updateUserPassword };
