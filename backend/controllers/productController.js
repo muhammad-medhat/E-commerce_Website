@@ -7,7 +7,12 @@ const Product = require("../model/productModel");
 const Category = require("../model/categoryModel");
 const Brand = require("../model/brandModel");
 
-// GET all Products
+/**
+ * @desc    GET all Products
+ * @route   GET /api/products/
+ * @access  Public
+ */
+
 const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find();
   res.status(200).json({
@@ -15,7 +20,11 @@ const getAllProducts = asyncHandler(async (req, res) => {
   });
 });
 
-//get single product
+/**
+ * @desc    GET single product
+ * @route   GET /api/products/:id
+ * @access  Public
+ */
 const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
@@ -30,8 +39,11 @@ const getProduct = asyncHandler(async (req, res) => {
 /**
  * functions to be used by Admin
  */
-
-//delete product
+/**
+ * @desc    Delete product
+ * @route   DELETE /api/products/:id
+ * @access  Private
+ */
 const deleteProduct = asyncHandler(async (req, res) => {
   const id = req.params.id;
   Product.findByIdAndRemove(id, (err, del) => {
@@ -48,7 +60,11 @@ const deleteProduct = asyncHandler(async (req, res) => {
   });
 });
 
-//create product
+/**
+ * @desc    Create product
+ * @route   POST /api/products/:id
+ * @access  Private
+ */
 const createProduct = asyncHandler(async (req, res) => {
   let product = req.body;
 
@@ -67,6 +83,11 @@ const createProduct = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * @desc    Update product
+ * @route   Put /api/products/:id
+ * @access  Private
+ */
 const updateProduct = asyncHandler(async (req, res) => {
   const { name, description, image, price, category, brand, quantity } =
     req.body;
