@@ -10,7 +10,9 @@ const Brand = require("../model/brandModel");
 // GET all Products
 const getAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find();
-  res.status(200).json({ products });
+  res.status(200).json({
+    products,
+  });
 });
 
 //get single product
@@ -23,6 +25,27 @@ const getProduct = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json(product);
+});
+
+/**
+ * functions to be used by Admin
+ */
+
+//delete product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  Product.findByIdAndRemove(id, (err, del) => {
+    if (err) {
+      res.json({
+        message: err,
+      });
+    } else {
+      res.json({
+        message: "successful Delete",
+        del,
+      });
+    }
+  });
 });
 
 //create product
@@ -86,6 +109,7 @@ module.exports = {
   getAllProducts,
   updateProduct,
   createProduct,
+  deleteProduct,
   getCats,
   getBrands,
 };

@@ -5,6 +5,7 @@ const {
   createProduct,
   getProduct,
   getAllProducts,
+  deleteProduct,
   getCats,
   getBrands,
 } = require("../controllers/productController");
@@ -30,6 +31,11 @@ router.get("/", getAllProducts);
 router.get("/:id", getProduct);
 
 /**
+ * The folowing Routes are specific to the admin
+ * - must be moved to adminRoutes.js
+ */
+
+/**
  * @Desc Create Product
  * @route POST api/products /
  */
@@ -40,5 +46,11 @@ router.post("/", createProduct);
  * @route PUT api/products/:id
  */
 router.put("/:id", updateProduct);
+
+/**
+ * @Desc Delete Product
+ * @route DELETE api/products/:id
+ */
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
