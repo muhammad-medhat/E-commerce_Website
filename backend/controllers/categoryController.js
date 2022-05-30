@@ -37,7 +37,7 @@ const createCategory = asyncHandler(async (req, res) => {
 
 // @desc    get all Category 
 // @route   GET /api/category/view
-// @access  Private
+// @access  Public
 
 const viewCategory = asyncHandler(async (req, res) => {
   const categories = await Category.find();

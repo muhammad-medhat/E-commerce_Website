@@ -4,12 +4,12 @@ const {
   createCategory,
   viewCategory,
   deleteCategory,
-  updateCategory
+  updateCategory,
 } = require("../controllers/categoryController");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
 router.post("/create", verifyAdmin, createCategory);
-router.get("/view", verifyAdmin, viewCategory);
+router.get("/view",  viewCategory);
 router.delete("/delete/:id", verifyAdmin, deleteCategory);
 router.put("/update/:id", verifyAdmin, updateCategory);
 
