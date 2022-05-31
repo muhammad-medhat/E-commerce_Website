@@ -17,6 +17,6 @@ app.get("/", async (req, res) => {
 });
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
-app.use("/api/category", require("./routes/categoryRoutes"));
+app.use("/api/categories", require("./routes/categoryRoutes"));
 app.use(errorHandler);
 app.listen(port, () => console.log(`Server start on port ${port}`));
