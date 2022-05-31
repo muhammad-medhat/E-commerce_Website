@@ -8,9 +8,9 @@ const {
 } = require("../controllers/categoryController");
 const { verifyAdmin } = require("../middleware/authMiddleware");
 
-router.post("/create", verifyAdmin, createCategory);
-router.get("/view",  viewCategory);
-router.delete("/delete/:id", verifyAdmin, deleteCategory);
-router.put("/update/:id", verifyAdmin, updateCategory);
+router.post("/", verifyAdmin, createCategory);
+router.get("/",  viewCategory);
+router.delete("/:id", verifyAdmin, deleteCategory);
+router.put("/:id", verifyAdmin, updateCategory);
 
 module.exports = router;

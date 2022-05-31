@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Category = require("../model/categoryModel");
 
 // @desc    Create Category 
-// @route   POST /api/category/create
+// @route   POST /api/categories/
 // @access  Private
 
 const createCategory = asyncHandler(async (req, res) => {
@@ -36,7 +36,7 @@ const createCategory = asyncHandler(async (req, res) => {
   });
 
 // @desc    get all Category 
-// @route   GET /api/category/view
+// @route   GET /api/categories/
 // @access  Public
 
 const viewCategory = asyncHandler(async (req, res) => {
@@ -45,7 +45,7 @@ const viewCategory = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete Category 
-// @route   DELETE /api/category/delete/:id
+// @route   DELETE /api/categories/:id
 // @access  Private
 
 const deleteCategory = asyncHandler(async (req, res) => {
@@ -63,7 +63,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 });
 
 // @desc    update Category 
-// @route   PUT /api/category/update/:id
+// @route   PUT /api/categories/:id
 // @access  Private
 
 const updateCategory = asyncHandler(async (req, res) => {
