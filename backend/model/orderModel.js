@@ -10,6 +10,7 @@ const orderSchema = mongoose.Schema(
       ref: "User",
     },
     orderDetails: { type: String },
+    archived: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
