@@ -19,3 +19,6 @@ function viewBrand
   //     err: err.message,
   //   });
   // }
+get prod by category or brand
+creating a modelfor reviews
+
