@@ -8,7 +8,6 @@ const Product = require("../model/productModel");
 const createCart = asyncHandler(async (id) => {
   await Cart.create({
     userId: id,
-    session:"",
     items: new Array(),
   });
 });
