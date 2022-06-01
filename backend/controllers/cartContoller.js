@@ -20,8 +20,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
   const { productId, quantity } = req.body;
 
   const product = await Product.findById(productId);
-  console.log(quantity);
-  console.log(product.quantityInStock);
+
   if (!product) {
     res.status(400);
     throw new Error("Product doesn't exist");
@@ -29,7 +28,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
 
   let cart = await Cart.findOne({ userId });
   if (!cart) {
-    await createCart(userId);
+    createCart(userId);
   }
 
   if (
@@ -49,6 +48,8 @@ const addItemToCart = asyncHandler(async (req, res) => {
   };
 
   cart = await Cart.findOne({ userId });
+  // If the cart item already exists in the cart update it
+  cart.items = cart.items.filter((item) => item.name != cartItem.name);
   cart.items.push(cartItem);
   await cart.save();
 
