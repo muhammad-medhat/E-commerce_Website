@@ -6,7 +6,7 @@ const {
 } = require("../controllers/cartContoller");
 const { verifyAuth } = require("../middleware/authMiddleware");
 
-router.post("/add", verifyAuth, addItemToCart);
+router.put("/add", verifyAuth, addItemToCart);
 router.put("/remove", verifyAuth, removeItemFromCart);
 
 module.exports = router;

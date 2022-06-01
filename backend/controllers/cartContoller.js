@@ -13,7 +13,7 @@ const createCart = asyncHandler(async (id) => {
 });
 
 // @desc    Add an item to the cart
-// @route   POST /api/cart/add
+// @route   PUT /api/cart/add
 // @access  private
 const addItemToCart = asyncHandler(async (req, res) => {
   const userId = req.user.id;
@@ -42,6 +42,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
   }
 
   const cartItem = {
+    id: productId,
     name: product.name,
     price: product.price,
     quantity,
@@ -49,7 +50,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
 
   cart = await Cart.findOne({ userId });
   // If the cart item already exists in the cart update it
-  cart.items = cart.items.filter((item) => item.name !== cartItem.name);
+  cart.items = cart.items.filter((item) => item.id !== productId);
   cart.items.push(cartItem);
   await cart.save();
 
