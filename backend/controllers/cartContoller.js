@@ -39,7 +39,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
   ) {
     res.status(400);
     throw new Error(
-      "The quantity requested is less than the quantity in stock"
+      "The quantity requested is greater than the quantity in stock"
     );
   }
 
