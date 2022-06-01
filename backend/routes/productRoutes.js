@@ -14,6 +14,8 @@ const {
  * @desc testing get categories, brands
  *   @route GET api/products/cats
  *   @route GET api/products/brands
+ *   @access  Public
+
  */
 router.get("/cats", getCats);
 router.get("/brands", getBrands);
@@ -21,12 +23,14 @@ router.get("/brands", getBrands);
 /**
  * @Desc get all Products
  * @route GET api/products/
+ * @access  Public
  */
 router.get("/", getAllProducts);
 
 /**
  * @Desc Select single Product
  * @route GET api/products/:id
+ * @access  Public
  */
 router.get("/:id", getProduct);
 
@@ -38,18 +42,21 @@ router.get("/:id", getProduct);
 /**
  * @Desc Create Product
  * @route POST api/products /
+ * * @access  Private
  */
 router.post("/", createProduct);
 
 /**
  * @Desc Update Product
  * @route PUT api/products/:id
+ * @access  Private
  */
 router.put("/:id", updateProduct);
 
 /**
  * @Desc Delete Product
  * @route DELETE api/products/:id
+ * @access  Private
  */
 router.delete("/:id", deleteProduct);
 
