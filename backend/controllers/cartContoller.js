@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const req = require("express/lib/request");
 const mongoose = require("mongoose");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
@@ -7,7 +8,7 @@ const Product = require("../model/productModel");
 const createCart = asyncHandler(async (id) => {
   await Cart.create({
     userId: id,
-    session: ";khj",
+    session:"",
     items: new Array(),
   });
 });
@@ -59,7 +60,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
   const cartItem = {
     id: productId,
     name: product.name,
-    price: product.price,
+    price: product.price * quantity,
     quantity,
   };
 

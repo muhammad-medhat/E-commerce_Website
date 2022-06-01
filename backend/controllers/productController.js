@@ -59,6 +59,7 @@ const createProduct = asyncHandler(async (req, res) => {
     price: product.price,
     category: product.category,
     brand: product.brand,
+    quantityInStock: product.quantityInStock,
   });
   res.json({
     code: res.statusCode,
@@ -68,7 +69,7 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, description, image, price, category, brand, quantity } =
+  const { name, description, image, price, category, brand, quantityInStock } =
     req.body;
 
   const id = req.params.id;
@@ -85,7 +86,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       price: price,
       category: category,
       brand: brand,
-      quantity: quantity,
+      quantityInStock: quantityInStock,
     });
     res.status(200).json({
       message: "Product updated successfully",
