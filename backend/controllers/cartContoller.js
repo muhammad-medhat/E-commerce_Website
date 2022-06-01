@@ -12,6 +12,21 @@ const createCart = asyncHandler(async (id) => {
   });
 });
 
+// @desc    Get all the elements in the cart
+// @route   GET /api/cart/
+// @access  private
+const getCartItems = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const cart = Cart.findOne({ userId });
+
+  if (!cart) {
+    res.status(400);
+    throw new Error("Cart doesn't exist");
+  } else {
+    res.json(cart);
+  }
+});
+
 // @desc    Add an item to the cart
 // @route   PUT /api/cart/add
 // @access  private
@@ -74,4 +89,4 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { addItemToCart, removeItemFromCart };
+module.exports = { addItemToCart, removeItemFromCart, getCartItems };
