@@ -3,6 +3,7 @@ const req = require("express/lib/request");
 const mongoose = require("mongoose");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
+const CartItem = require("../model/cartItemModel");
 
 // Create cart utility function
 const createCart = asyncHandler(async (id) => {
@@ -56,16 +57,16 @@ const addItemToCart = asyncHandler(async (req, res) => {
     );
   }
 
-  const cartItem = {
-    id: productId,
+  const cartItem = await CartItem.create({
+    productId,
     name: product.name,
-    price: product.price * quantity,
+    totalPrice: product.price * quantity,
     quantity,
-  };
+  });
 
   cart = await Cart.findOne({ userId });
   // If the cart item already exists in the cart update it
-  cart.items = cart.items.filter((item) => item.id !== productId);
+  cart.items = cart.items.filter((item) => item.productId !== productId);
   cart.items.push(cartItem);
   await cart.save();
 
@@ -83,7 +84,7 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Can't remove a product from a cart that doesn't exist");
   } else {
-    cart.items = cart.items.filter((item) => item.id !== productId);
+    cart.items = cart.items.filter((item) => item.productId !== productId);
     await cart.save();
     res.json(cart);
   }
