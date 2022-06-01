@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Brand = require("../model/brandModel");
+const Product = require("../model/productModel");
 /**
  * @desc    Create Brand
  * @route   POST /api/brand/
@@ -106,6 +107,25 @@ const viewBrand = asyncHandler(async (req, res) => {
     });
   }
 });
+
+/**
+ *  @desc    Get Brand products
+ *  @route   GET /api/brand/:id/products
+ *  @access  Public
+ * */
+
+const getBrandProducts = asyncHandler(async (req, res) => {
+  const brandId = req.params.id;
+  const brand = await Brand.find({ _id: brandId });
+  if (exists(brandId)) {
+    const products = await Product.find({
+      brand: mongoose.Types.ObjectId(brandId),
+    });
+
+    res.status(200).json({ ...brand, products });
+  }
+});
+
 function exists(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
@@ -116,4 +136,5 @@ module.exports = {
   viewBrand,
   deleteBrand,
   updateBrand,
+  getBrandProducts,
 };
