@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Category = require("../model/categoryModel");
+const Product = require("../model/productModel");
 
 // @desc    Create Category 
 // @route   POST /api/categories/
@@ -78,4 +79,23 @@ const updateCategory = asyncHandler(async (req, res) => {
   res.status(200).json(updatedCategory);
 })
 
-  module.exports = { createCategory, viewCategory , deleteCategory, updateCategory };
+// @desc    Get category products
+// @route   GET /api/categories/:id/products
+// @access  Public
+ 
+const getCategoryProducts = asyncHandler(async (req, res) => {
+  const categoryId = req.params.id;
+  const category = await Category.find({ _id: categoryId });
+  if (exists(categoryId)) {
+    const products = await Product.find({
+      category: mongoose.Types.ObjectId(categoryId),
+    });
+
+    res.status(200).json({ ...category, products });
+  }
+});
+
+function exists(id) {
+  return mongoose.Types.ObjectId.isValid(id);
+};
+  module.exports = { createCategory, viewCategory , deleteCategory, updateCategory, getCategoryProducts };

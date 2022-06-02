@@ -81,20 +81,6 @@ const getCoupon = asyncHandler(async (req, res) => {
 });
 
 
-// @desc    Get category products
-// @route   GET /api/categories/:id/products
-// @access  Public
- 
-const getCategoryProducts = asyncHandler(async (req, res) => {
-  const categoryId = req.params.id;
-  const Category = await Category.find({ _id: categoryId });
-  if (exists(categoryId)) {
-    const products = await Product.find({
-      category: mongoose.Types.ObjectId(categoryId),
-    });
 
-    res.status(200).json({ ...category, products });
-  }
-});
 
-module.exports = { createCoupon, viewCoupon, getCoupon, getCategoryProducts };
+module.exports = { createCoupon, viewCoupon, getCoupon };
