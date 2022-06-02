@@ -14,8 +14,7 @@ const { getUser } = require("./userController");
 const getAllOrders = asyncHandler(async (req, res) => {
   /**
    * get all orders if user is admin
-   * get all user orders if user is user 
-   */
+   * get all user orders if for loggedin user   */
       const orders = await Order.find();
       res.status(200).json({
         orders,
