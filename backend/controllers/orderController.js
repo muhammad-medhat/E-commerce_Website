@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Order = require("../model/orderModel");
+const { getUser } = require("./userController");
 
 
 /**
@@ -15,10 +16,23 @@ const getAllOrders = asyncHandler(async (req, res) => {
    * get all orders if user is admin
    * get all user orders if user is user 
    */
-  const orders = await Order.find();
-  res.status(200).json({
-    orders,
-  });
+      const orders = await Order.find();
+      res.status(200).json({
+        orders,
+      });
+  // res.json({req.body})
+  // if (req.user.role === "admin") {
+
+  //     const orders = await Order.find();
+  //     res.status(200).json({
+  //       orders,
+  //     });
+  //   } else {
+  //     const orders = await Order.find({ user: req.user.id });
+  //     res.status(200).json({
+  //       orders,
+  //     });
+  //   }
 });
 
 /**
@@ -72,15 +86,38 @@ const archiveOrder = asyncHandler(async (req, res) => {
  * @access Private admin
  */
 const createOrder = asyncHandler(async (req, res) => {
-  let order = req.body;
+  //const {_id, mail} = req.user;
+  const userId = req.user._id
 
-  order = await Order.create({  });
-  res.json({
-    code: res.statusCode,
-    message: "Order created",
-    order,
-  });
+  Order.init().then( () => {
+    const order = new Order({
+      _id: mongoose.Types.ObjectId(),
+      userId
+    });
+    order.save((err, order) => {
+      if (err) {
+        res.json({
+          error: err,
+          message: err,
+        });
+      } else {
+        res.json({
+          message: "Order Created",
+          order,
+        });
+      }
+    })//save
+  })//init
+              // const order = await Order.create({ 
+              //   userId
+              // });
+              // res.json({
+              //   code: res.statusCode,
+              //   message: "Order created",
+              //   order
+              // });
 });
+
 
 /**
  * @Desc Update an Order

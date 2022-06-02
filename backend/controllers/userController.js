@@ -112,7 +112,7 @@ const regUser = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, username, email } = await User.findById(req.user.id);
+  const { _id, username, email } = await User.findById(req.params.id);
   res.status(200).json({
     id: _id,
     username,
@@ -146,6 +146,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid credentials");
   }
+  
 });
 
 // @desc    logout a user
@@ -164,5 +165,17 @@ const generateToken = (id) => {
     expiresIn: maxAge,
   });
 };
+//use cookie to get user id
+const getUserId = (req) => {
+  const {
+    cookies: { jwt },
+  } = req;
+  if (jwt) {
+    const { id } = jwt.split(".")[1];
+    return id;
+  }
+};
+
+
 
 module.exports = { updateUser, regUser, getUser, logoutUser, loginUser };

@@ -9,14 +9,8 @@ const {
   getCats,
   getBrands,
 } = require("../controllers/orderController");
+const { verifyAuth } = require("../middleware/authMiddleware");
 
-/**
- * @desc testing get categories, brands
- *   @route GET api/orders/cats
- *   @route GET api/orders/brands
- */
-router.get("/cats", getCats);
-router.get("/brands", getBrands);
 
 /**
  * @Desc get all Orders
@@ -40,7 +34,7 @@ router.get("/:id", getOrder);
  * @Desc Create Order
  * @route POST api/orders /
  */
-router.post("/", createOrder);
+router.post("/", verifyAuth, createOrder);
 
 /**
  * @Desc Update Order

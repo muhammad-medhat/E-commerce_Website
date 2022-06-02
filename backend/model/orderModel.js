@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema(
   {
+    _id: mongoose.Schema.Types.ObjectId,
     status: { type: String, default: "pending" },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      require: true,
-      unique: true,
+      required: true,
+      // unique: true,// shouldnt be unique
       ref: "User",
     },
     orderDetails: { type: String },
