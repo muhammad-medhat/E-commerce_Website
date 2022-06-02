@@ -1,0 +1,42 @@
+aside {
+    position: sticky;
+    left: 0;
+    top: 68px;
+    height: calc(100vh - 68px);
+    width: 300px;
+    background-color: var(--main-color);
+    flex-direction: column;
+}
+
+.aside_links {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    align-items: center;
+    justify-content:space-between;
+}
+
+aside a {
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--black-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 8px 25px;
+    border-radius: 4px;
+    transition: .3s ease;
+    width: 100%;
+}
+
+aside a svg {
+    margin-right: .5rem;
+    font-size: 20px;
+}
+
+aside a.active,
+aside a:hover {
+    background-color: var(--button-color);
+    color: var(--black-color);
+    padding-left: 30px;
+}

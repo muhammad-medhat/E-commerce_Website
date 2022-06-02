@@ -1,0 +1,33 @@
+.navbar {
+    font-family: var(--italiana-font);
+    background-color: var(--main-color);
+}
+
+.navbar .navbar-brand {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: .06rem;
+    margin-left: 1rem;
+}
+
+.navbar .navbar-nav li{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.navbar .navbar-nav li:not(:last-child) {
+    margin-right: 10rem
+}
+
+.navbar .icons svg{
+    font-size: 23px;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+.navbar .icons a {
+    color: #000;
+    font-size: 23px;
+    cursor: pointer;
+    margin: 0;
+}

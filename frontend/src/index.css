@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@600&display=swap');
+:root {
+    --main-color: #FFFDF8;
+    --button-color: #E7DCCA;
+    --black-color: #333;
+    --section-color: #FDF9F3;
+    --sky-color: #F1F5F3;
+    --cormorant-font: 'Cormorant Upright', serif;
+    --font-base: sans-serif;
+}
+
+body {
+    font-family: var(--cormorant-font) ;
+}
