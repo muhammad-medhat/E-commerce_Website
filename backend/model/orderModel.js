@@ -11,7 +11,7 @@ const orderSchema = mongoose.Schema(
     },
     orderDetails: { type: String },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Order", orderSchema);
