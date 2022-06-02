@@ -13,6 +13,6 @@ router.post("/", verifyAdmin, createCategory);
 router.get("/",  viewCategory);
 router.delete("/:id", verifyAdmin, deleteCategory);
 router.put("/:id", verifyAdmin, updateCategory);
-router.get("/:id", getCategoryProducts);
+router.get("/:id/products", getCategoryProducts);
 
 module.exports = router;
