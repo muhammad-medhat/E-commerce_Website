@@ -59,7 +59,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     await Category.findByIdAndDelete(req.params.id);
     res.status(201).json({
       id: category.id,
-    });  
+    });
 });
 
 // @desc    update Category 
