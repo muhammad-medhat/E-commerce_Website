@@ -22,9 +22,12 @@ const verifyAuth = asyncHandler(async (req, res, next) => {
     next();
 
     }catch(error){
-      console.log(error);
       res.status(401)
-      throw new Error("Not authorized")
+      .json({   
+        code: res.statusCode,
+        message: "Not authorized to access this resource",
+      });
+      // throw new Error("Not authorized")
     }
 }
 if (!token){
