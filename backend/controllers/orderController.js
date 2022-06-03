@@ -6,7 +6,6 @@ const Order = require("../model/orderModel");
 const { getUser } = require("./userController");
 const User = require("../model/userModel");
 
-
 /**
  * @Desc get all Orders
  * @route GET api/orders/
@@ -17,35 +16,39 @@ const getAllOrders = asyncHandler(async (req, res) => {
    * get all user orders for loggedin user
    * */
   if (!req.user) {
-      res.status(400).json({
+    res.status(400).json({
       code: res.statusCode,
       message: "Please login to see your orders",
     });
-  } else {    
+  } else {
     const orders = await Order.find({ user: req.user.id });
     res.status(200).json({
       user: req.user,
       num: orders.length,
       orders,
-    
     });
   }
 });
 
 /**
- * @Desc get single Order
+ * @Desc Gets a single Order by id for the current logged in user 
  * @route GET api/orders/:id
  * @access Private user
  */
 const getOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id);
+  if (exists(req.params.id)) { 
+    const order = await Order.findById(req.params.id);
+    res.status(200).json({
+      order,
+    });
+  } else {
+    //   throw new Error(`Order not found`);
 
-  if (!order) {
-    res.status(400);
-    throw new Error(`Order not found`);
+    res.status(400).json({
+      code: res.statusCode,
+      message: "Please enter a valid order id",
+    });
   }
-
-  res.status(200).json(order);
 });
 
 /**
@@ -59,7 +62,7 @@ const getOrder = asyncHandler(async (req, res) => {
  */
 const archiveOrder = asyncHandler(async (req, res) => {
   /**
-   * archive order 
+   * archive order
    */
   const id = req.params.id;
   const order = await Order.findById(id);
@@ -69,13 +72,11 @@ const archiveOrder = asyncHandler(async (req, res) => {
   }
   order.archived = !order.archived;
 
-      res.json({
-        message: "Order Archived",
-        order,
-      });
-   
+  res.json({
+    message: "Order Archived",
+    order,
+  });
 });
-
 
 /**
  * @Desc Create an Order
@@ -89,16 +90,15 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  const order = await Order.create({ 
+  const order = await Order.create({
     userId: req.user.id,
   });
   res.json({
     code: res.statusCode,
     message: "Order created",
-    order
+    order,
   });
 });
-
 
 /**
  * @Desc Update an Order
@@ -117,9 +117,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid order");
   } else {
-    const updated = await Order.findByIdAndUpdate(id, {
-
-    });
+    const updated = await Order.findByIdAndUpdate(id, {});
     res.status(200).json({
       message: "Order updated successfully",
       orig: order,
@@ -136,6 +134,9 @@ const getBrands = asyncHandler(async (req, res) => {
   const brands = await Brand.find();
   res.status(200).json({ brands });
 });
+function exists(id) {
+  return mongoose.Types.ObjectId.isValid(id);
+}
 
 module.exports = {
   getOrder,
