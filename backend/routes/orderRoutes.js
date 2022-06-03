@@ -13,17 +13,18 @@ const { verifyAuth } = require("../middleware/authMiddleware");
 
 
 /**
- * @Desc get all Orders
+ * @Desc get all Orders for the logged in user
  * @route GET api/orders/
- * @access Private admin, user
+ * @access Private user
  */
-router.get("/", getAllOrders);
+router.get("/", verifyAuth, getAllOrders);
 
 /**
  * @Desc Select single Order
  * @route GET api/orders/:id
+ * @access Private user
  */
-router.get("/:id", getOrder);
+router.get("/:id", verifyAuth, getOrder);
 
 /**
  * The folowing Routes are specific to the admin

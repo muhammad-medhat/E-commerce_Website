@@ -4,34 +4,32 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Order = require("../model/orderModel");
 const { getUser } = require("./userController");
+const User = require("../model/userModel");
 
 
 /**
  * @Desc get all Orders
  * @route GET api/orders/
- * @access Private admin, user
+ * @access Private user
  */
 const getAllOrders = asyncHandler(async (req, res) => {
   /**
-   * get all orders if user is admin
-   * get all user orders if for loggedin user   */
-      const orders = await Order.find();
-      res.status(200).json({
-        orders,
-      });
-  // res.json({req.body})
-  // if (req.user.role === "admin") {
-
-  //     const orders = await Order.find();
-  //     res.status(200).json({
-  //       orders,
-  //     });
-  //   } else {
-  //     const orders = await Order.find({ user: req.user.id });
-  //     res.status(200).json({
-  //       orders,
-  //     });
-  //   }
+   * get all user orders for loggedin user
+   * */
+  if (!req.user) {
+      res.status(400).json({
+      code: res.statusCode,
+      message: "Please login to see your orders",
+    });
+  } else {    
+    const orders = await Order.find({ user: req.user.id });
+    res.status(200).json({
+      user: req.user,
+      num: orders.length,
+      orders,
+    
+    });
+  }
 });
 
 /**
@@ -64,57 +62,41 @@ const archiveOrder = asyncHandler(async (req, res) => {
    * archive order 
    */
   const id = req.params.id;
-  Order.findByIdAndUpdate(id, {archived: true}, (err, arc) => {
-    if (err) {
-      res.json({
-        message: err,
-      });
-    } else {
+  const order = await Order.findById(id);
+  if (!order) {
+    res.status(400);
+    throw new Error(`Order not found`);
+  }
+  order.archived = !order.archived;
+
       res.json({
         message: "Order Archived",
-        arc,
+        order,
       });
-    }
-  });
+   
 });
 
 
 /**
  * @Desc Create an Order
  * @route POST api/orders/
- * @access Private admin
+ * @access Private user
  */
 const createOrder = asyncHandler(async (req, res) => {
-  //const {_id, mail} = req.user;
-  const userId = req.user._id
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found");
+  }
 
-  Order.init().then( () => {
-    const order = new Order({
-      _id: mongoose.Types.ObjectId(),
-      userId
-    });
-    order.save((err, order) => {
-      if (err) {
-        res.json({
-          error: err,
-          message: err,
-        });
-      } else {
-        res.json({
-          message: "Order Created",
-          order,
-        });
-      }
-    })//save
-  })//init
-              // const order = await Order.create({ 
-              //   userId
-              // });
-              // res.json({
-              //   code: res.statusCode,
-              //   message: "Order created",
-              //   order
-              // });
+  const order = await Order.create({ 
+    userId: req.user.id,
+  });
+  res.json({
+    code: res.statusCode,
+    message: "Order created",
+    order
+  });
 });
 
 
