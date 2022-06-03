@@ -31,12 +31,12 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 
 /**
- * @Desc Gets a single Order by id for the current logged in user 
+ * @Desc Gets a single Order by id for the current logged in user
  * @route GET api/orders/:id
  * @access Private user
  */
 const getOrder = asyncHandler(async (req, res) => {
-  if (exists(req.params.id)) { 
+  if (exists(req.params.id)) {
     const order = await Order.findById(req.params.id);
     res.status(200).json({
       order,
@@ -52,10 +52,7 @@ const getOrder = asyncHandler(async (req, res) => {
 });
 
 /**
- * functions to be used by Admin
- */
-
-/**
+ * #TODO: check requirements (if the user can archive the order)
  * @Desc Archive an Order
  * @route Delete api/orders/:id
  * @access Private admin
@@ -65,17 +62,27 @@ const archiveOrder = asyncHandler(async (req, res) => {
    * archive order
    */
   const id = req.params.id;
-  const order = await Order.findById(id);
-  if (!order) {
-    res.status(400);
-    throw new Error(`Order not found`);
-  }
-  order.archived = !order.archived;
+  if (exists(req.params.id)) {
+    const order = await Order.findById(id);
+    const arc = order.archived;
 
-  res.json({
-    message: "Order Archived",
-    order,
-  });
+    Order.updateOne({ _id: id }, { archived: !arc }, (err) => {
+      if (err) {
+        res.json({
+          statusCode: 400,
+          message: err.message,
+        });
+      } else {
+        console.log(req);
+        res.json({
+          statusCode: 200,
+          message: "Order archived",
+          order,
+          
+        });
+      }
+    });
+  }
 });
 
 /**

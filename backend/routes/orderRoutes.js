@@ -40,13 +40,15 @@ router.post("/", verifyAuth, createOrder);
 /**
  * @Desc Update Order
  * @route PUT api/orders/:id
+ * @access Private user
  */
-router.put("/:id", updateOrder);
+router.put("/:id", verifyAuth, updateOrder);
 
 /**
  * @Desc Archive Order
  * @route DELETE api/orders/:id
+ * @access Private user
  */
-router.delete("/:id", archiveOrder);
+router.delete("/:id", verifyAuth, archiveOrder);
 
 module.exports = router;
