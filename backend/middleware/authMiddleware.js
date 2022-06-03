@@ -32,7 +32,11 @@ const verifyAuth = asyncHandler(async (req, res, next) => {
 }
 if (!token){
     res.status(401)
-    throw new Error("Not authorized, no token");
+    .json({ 
+      code: res.statusCode,
+      message: "Not authorized, no token provided",
+    });
+    //throw new Error("");
 }
 })
 
