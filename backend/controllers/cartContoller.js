@@ -19,12 +19,12 @@ const createCart = asyncHandler(async (id) => {
 const getCartItems = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const cart = Cart.findOne({ userId });
-
+console.log(cart);
   if (!cart) {
     res.status(400);
     throw new Error("Cart doesn't exist");
   } else {
-    res.json(cart);
+    res.json(cart.items);
   }
 });
 
