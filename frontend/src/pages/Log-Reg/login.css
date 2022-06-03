@@ -1,0 +1,53 @@
+
+h2 {
+    margin: 25px 0px 10px 0px;
+}
+form {
+    padding: 10px;
+    border-radius: 15px;
+    border: none;
+}
+input {
+    width: 60vh;
+    display: block;
+    border-radius: 5px;
+    border: 0px;
+    margin: 10px 0px;
+    padding: 2px;
+    box-shadow: 4px 2px 25px;
+}
+img {
+    position: relative;;
+}
+
+.log-reg-box {
+    height: 75vh;
+    margin: 4px;
+    justify-content: center;
+}
+.log-reg-container {
+    border-radius: 15px;
+    border: none;
+    box-shadow: -4px 4px 30px;
+    margin: 2px;
+    justify-content: space-evenly;
+}
+.side-img {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 4px 4px 30px;
+    margin: 2px;
+
+    background-image: url("./plog-reg.jpg");
+    background-position: center;
+}
+.info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.switching-Button {
+    margin-top: 1px;
+    border-radius: 10px;
+}
+
