@@ -73,12 +73,10 @@ const archiveOrder = asyncHandler(async (req, res) => {
           message: err.message,
         });
       } else {
-        console.log(req);
         res.json({
           statusCode: 200,
           message: "Order archived",
           order,
-          
         });
       }
     });
@@ -116,6 +114,7 @@ const createOrder = asyncHandler(async (req, res) => {
 const updateOrder = asyncHandler(async (req, res) => {
   /**
    * not implemented yet
+   * check the cart logic before implementing
    */
   const id = req.params.id;
 
