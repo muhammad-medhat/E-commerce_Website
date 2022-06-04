@@ -26,14 +26,12 @@ router.get("/", verifyAuth, getAllOrders);
  */
 router.get("/:id", verifyAuth, getOrder);
 
-/**
- * The folowing Routes are specific to the admin
- * - must be moved to adminRoutes.js
- */
+
 
 /**
  * @Desc Create Order
- * @route POST api/orders /
+ * @route POST api/orders/
+ * @access Private user
  */
 router.post("/", verifyAuth, createOrder);
 
