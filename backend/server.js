@@ -23,6 +23,6 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/coupons", require("./routes/couponRoutes"));
 app.use("/api/product", require("./routes/productReviewRoutes"));
 app.use("/api/cart", require("./routes/cartRoutes"));
-
+app.use("/api/customer", require("./routes/contactUsRoutes"));
 app.use(errorHandler);
 app.listen(port, () => console.log(`Server start on port ${port}`));
