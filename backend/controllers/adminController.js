@@ -98,7 +98,17 @@ const changeUserStatus = asyncHandler(async (req, res) => {
       .json({ message: `Status updated successfully to ${status}`,user });
   }
 });
-
+/**
+ * 
+    __          _               
+  / __ \        | |              
+ | |  | |_ __ __| | ___ _ __ ___ 
+ | |  | | '__/ _` |/ _ \ '__/ __|
+ | |__| | | | (_| |  __/ |  \__ \
+  \____/|_|  \__,_|\___|_|  |___/
+                                 
+                                 
+ */
 
 /**
  * @desc Get all orders
@@ -140,7 +150,26 @@ const getAllOrders = asyncHandler(async (req, res) => {
     });
   }
 });
+/**
+ * @description Update User State
+ * @route POST /api/admin/orders/:id/status
+ * @access Private
+ */
 
+ const changeOrderStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+  const order = await Order.findOne({ id });
+  if (!order) {
+    res.status(400);
+    throw new Error("Invalid order");
+  } else {
+    await Order.findByIdAndUpdate(id, { status });
+    res
+      .status(200)
+      .json({ message: `Status updated successfully to ${status}`,order });
+  }
+});
 
 
 module.exports = {
@@ -150,6 +179,6 @@ module.exports = {
   updateUserPassword,
   changeUserStatus,
   getAllOrders,
-  getSingleOrder
+  getSingleOrder,changeOrderStatus
 
 };

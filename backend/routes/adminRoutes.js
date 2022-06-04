@@ -7,7 +7,7 @@ const {
   updateUserPassword,
   changeUserStatus,
   getAllOrders,
-  getSingleOrder
+  getSingleOrder,changeOrderStatus
 
 } = require("../controllers/adminController");
 const { verifyAdmin } = require("../middleware/authMiddleware");
@@ -31,5 +31,13 @@ router.get("/orders", verifyAdmin, getAllOrders);
  * @access Private
  */
  router.get("/orders/:id", verifyAdmin, getSingleOrder);
+
+ /**
+ * @desc Change order status
+ * @route PUT /api/admin/orders/:id/status
+ * @access Private
+ */
+ router.put("/orders/:id/status", verifyAdmin, changeOrderStatus);
+
 
 module.exports = router;
