@@ -18,14 +18,11 @@ const createCart = asyncHandler(async (id) => {
 // @access  private
 const getCartItems = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const cart = Cart.findOne({ userId });
-console.log(cart);
+  const cart = await Cart.findOne({ userId });
   if (!cart) {
-    res.status(400);
-    throw new Error("Cart doesn't exist");
-  } else {
-    res.json(cart.items);
+    createCart(userId);
   }
+  res.json(cart.items);
 });
 
 // @desc    Add an item to the cart
@@ -66,11 +63,11 @@ const addItemToCart = asyncHandler(async (req, res) => {
 
   cart = await Cart.findOne({ userId });
   // If the cart item already exists in the cart update it
-  cart.items = cart.items.filter((item) => item.productId !== productId);
+  cart.items = cart.items.filter((item) => !item.productId.equals(productId));
   cart.items.push(cartItem);
   await cart.save();
 
-  res.json(cart);
+  res.json(cart.items);
 });
 
 // @desc    Remove an item from the cart
@@ -84,9 +81,9 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Can't remove a product from a cart that doesn't exist");
   } else {
-    cart.items = cart.items.filter((item) => item.productId !== productId);
+    cart.items = cart.items.filter((item) => !item.productId.equals(productId));
     await cart.save();
-    res.json(cart);
+    res.json(cart.items);
   }
 });
 
