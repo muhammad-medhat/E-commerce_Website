@@ -78,4 +78,17 @@ const updateCategory = asyncHandler(async (req, res) => {
   res.status(200).json(updatedCategory);
 })
 
-  module.exports = { createCategory, viewCategory , deleteCategory, updateCategory };
+// @desc    get single Category by name
+// @route   GET /api/categories/:name
+// @access  Public
+const getCatByName =   (name) => { 
+  const category =  Category.findOne({ name });
+  if(!category){
+
+return ""
+  }
+  return category._id
+
+}
+
+  module.exports = { createCategory, viewCategory , deleteCategory, updateCategory, getCatByName}; 

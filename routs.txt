@@ -1,0 +1,20 @@
+
+ * @Desc get all Orders for the logged in user
+ * @route GET api/orders/
+
+ * @Desc Select single Order
+ * @route GET api/orders/:id
+
+ * @Desc Create Order
+ * @route POST api/orders/
+
+ * @Desc Update Order
+ * @route PUT api/orders/:id
+
+ * @Desc Archive Order
+ * @route DELETE api/orders/:id
+ 
+ Admin routes
+
+// @desc    GET all Users
+// @route   Get /api/admin/users
