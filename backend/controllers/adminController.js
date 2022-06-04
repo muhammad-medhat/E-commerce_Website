@@ -98,17 +98,7 @@ const changeUserStatus = asyncHandler(async (req, res) => {
       .json({ message: `Status updated successfully to ${status}`,user });
   }
 });
-/**
- * 
-    __          _               
-  / __ \        | |              
- | |  | |_ __ __| | ___ _ __ ___ 
- | |  | | '__/ _` |/ _ \ '__/ __|
- | |__| | | | (_| |  __/ |  \__ \
-  \____/|_|  \__,_|\___|_|  |___/
-                                 
-                                 
- */
+
 
 /**
  * @desc Get all orders
@@ -151,7 +141,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 /**
- * @description Update User State
+ * @description Update Order State
  * @route POST /api/admin/orders/:id/status
  * @access Private
  */
