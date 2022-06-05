@@ -10,6 +10,7 @@ const Footer = () => (
             
             <div className="col-4">
                 <h5 className="text">RandName</h5>
+                
             </div>
 
             <hr className="clearfix d-md-none"/>
