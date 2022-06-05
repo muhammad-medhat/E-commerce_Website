@@ -52,21 +52,18 @@ const getOrder = asyncHandler(async (req, res) => {
 });
 
 /**
- * #TODO: check requirements (if the user can archive the order)
- * @Desc Archive an Order
+ * @Desc Cancel an Order
  * @route Delete api/orders/:id
  * @access Private admin
  */
 const archiveOrder = asyncHandler(async (req, res) => {
-  /**
-   * archive order
-   */
-  const id = req.params.id;
-  if (exists(req.params.id)) {
-    const order = await Order.findById(id);
-    const arc = order.archived;
 
-    Order.updateOne({ _id: id }, { archived: !arc }, (err) => {
+  const {id} = req.params;
+  if (exists(id)) {
+    // const order = await Order.findById(id);
+    // const arc = order.archived;
+
+    Order.updateOne({ _id: id }, { archived: true }, (err) => {
       if (err) {
         res.json({
           statusCode: 400,
@@ -75,10 +72,15 @@ const archiveOrder = asyncHandler(async (req, res) => {
       } else {
         res.json({
           statusCode: 200,
-          message: "Order archived",
-          order,
+          message: "Order archived"
+          
         });
       }
+    });
+  } else {  
+    res.json({
+      statusCode: 404,
+      message: "Order not found"
     });
   }
 });
