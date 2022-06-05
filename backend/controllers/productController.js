@@ -41,41 +41,38 @@ const getProduct = asyncHandler(async (req, res) => {
 });
 
 /**
- * functions to be used by Admin
- */
-/**
- * @desc    Delete product
+ * @desc    Delete product (set stock to 0)
  * @route   DELETE /api/products/:id
- * @access  Private
- */
+ * @access  Private Admin
+ * */
 const deleteProduct = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  Product.findByIdAndRemove(id, (err, del) => {
+  const { id } = req.params;
+  Product.findByIdAndUpdate(id, { quantityInStock: 0 }, { new: true }, (err, product) => {
     if (err) {
-      res.json({
-        message: err,
-      });
-    } else {
-      res.json({
-        message: "successful Delete",
-        del,
+      res.status(400).json({
+        message: "Product not found",
       });
     }
+    res.status(200).json({
+      message: "Product deleted",
+      product,
+    });
   });
 });
+      
 
 /**
  * @desc    Create product
  * @route   POST /api/products/:id
- * @access  Private
+ * @access  Private Admin
  */
 const createProduct = asyncHandler(async (req, res) => {
-  let product = req.body;
+  const product = req.body;
 
   product = await Product.create({
     name: product.name,
     description: product.description,
-    image: product.image,
+    images: product.images,
     price: product.price,
     category: product.category,
     brand: product.brand,
