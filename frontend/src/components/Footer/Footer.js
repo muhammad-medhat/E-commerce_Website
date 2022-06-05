@@ -5,17 +5,17 @@ import { FaFacebookF ,FaTwitter } from "react-icons/fa";
 
 const Footer = () => (
     <footer className="footer">
-    <div className="container-fluid">
+    <div className="container-fluid text-center text-md-left">
         <div className="row">
             
-            <div className="col-4">
+            <div className="col-md-4 mt-md-0 mt-2">
                 <h5 className="text">RandName</h5>
                 
             </div>
 
             <hr className="clearfix d-md-none"/>
 
-            <div className="col-3">
+            <div className="col-md-2 mb-md-0 mb-2">
                 <h5 className="text-uppercase">About</h5>
                 <ul className="list-unstyled">
                     <li><a className="text2" href="HOME">HOME</a></li>
@@ -25,19 +25,18 @@ const Footer = () => (
                 </ul>
             </div>
 
-            <div className="col-3">
+            <div className="col-md-2 mb-md-0 mb-2">
                 <h5 className="text-uppercase">Privacy</h5>
                 <ul className="list-unstyled">
                     <li><a class="text2" role="button" href="PAYMENT">PAYMENT</a></li>
                 </ul>
             </div>
 
-            <div className="col-2">
+            <div className="col-md-2 mb-md-0 mb-2">
                 <h5 className="text-uppercase">Get in touch</h5>
-                <ul className="list-unstyled-center">
-                    <li className="d-flex icons">
-                    <Link to="/Facebook"><FaFacebookF /></Link> 
-                    <p className="space">. .</p>
+                <ul className="list-unstyled">
+                    <li className="icons">
+                    <Link to="/Facebook"> <FaFacebookF /></Link> 
                     <Link to="/Twitter"> <FaTwitter /></Link>
                     </li>
                     
