@@ -9,6 +9,7 @@ const {
   getCats,
   getBrands,
 } = require("../controllers/productController");
+const { verifyAdmin } = require("../middleware/authMiddleware");
 
 /**
  * @desc testing get categories, brands
@@ -21,6 +22,7 @@ router.get("/brands", getBrands);
 /**
  * @Desc get all Products
  * @route GET api/products/
+ * @access Public
  */
 router.get("/", getAllProducts);
 
@@ -38,19 +40,22 @@ router.get("/:id", getProduct);
 /**
  * @Desc Create Product
  * @route POST api/products /
+ * @access Private
  */
-router.post("/", createProduct);
+router.post("/", verifyAdmin, createProduct);
 
 /**
  * @Desc Update Product
  * @route PUT api/products/:id
+ * @access Private
  */
-router.put("/:id", updateProduct);
+router.put("/:id", verifyAdmin, updateProduct);
 
 /**
  * @Desc Delete Product
  * @route DELETE api/products/:id
+ * @access Private
  */
-router.delete("/:id", deleteProduct);
+router.delete("/:id", verifyAdmin, deleteProduct);
 
 module.exports = router;
