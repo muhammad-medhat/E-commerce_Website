@@ -126,9 +126,19 @@ const getUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
+ 
   // Check for user email
   const user = await User.findOne({ email });
+  // checking the user status
+  if(user.status === 'DEACTIVATED'){
+    res.status(400);
+    throw new Error("User is Deactivated");
+   }
+   else if(user.status === 'SUSPENDED'){
+    res.status(400);
+    throw new Error("User is suspended");
+   }
+   else{
   // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user._id);
@@ -146,7 +156,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid credentials");
   }
-  
+}
 });
 
 // @desc    logout a user
