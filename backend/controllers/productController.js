@@ -1,12 +1,16 @@
+const fetch = (...args) =>
+import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
+const ProductM = require("../model/productMModel");
 
 const Category = require("../model/categoryModel");
 const Brand = require("../model/brandModel");
-
+const catController = require("../controllers/categoryController");
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
@@ -117,6 +121,53 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * my functions
+ */
+const generateProducts = asyncHandler(async (req, res) => {
+  // res.json({ message: "generating products" });
+  const products =[]
+  fetch('https://dummyjson.com/products')
+  .then(res => res.json())
+  .then(data => {
+    Array.from(data.products).forEach( async element => {
+      const product = await ProductM.create({
+        name: element.title,
+        description: element.description,
+        images: element.images,
+        thumbnail: element.thumbnail,
+        price: element.price,
+        category: catController.getCatByName(element.category)._id,
+        //brand: element.brand,
+        quantity: element.quantity,
+      });
+      products.push(product);
+    });
+    res.json({ 
+      message: "products generated",
+      products,
+      data
+     });
+  });
+});
+
+
+const genCats = asyncHandler(async (req, res) => {
+  //res.json({ message: "generating categories" });
+
+  fetch('https://dummyjson.com/products/categories')
+  .then(res => res.json())
+  .then(dt=>{
+    dt.forEach(async (item) => {
+      const category = await Category.create({
+        name: item,
+      });
+    });
+    res.json({dt})
+  });
+    
+
+});
 const getCats = asyncHandler(async (req, res) => {
   const categories = await Category.find();
   res.status(200).json({ categories });
@@ -134,4 +185,6 @@ module.exports = {
   deleteProduct,
   getCats,
   getBrands,
+
+  generateProducts, genCats,
 };

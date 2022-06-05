@@ -8,6 +8,7 @@ const {
   deleteProduct,
   getCats,
   getBrands,
+  generateProducts, genCats,
 } = require("../controllers/productController");
 
 /**
@@ -19,6 +20,8 @@ const {
  */
 router.get("/cats", getCats);
 router.get("/brands", getBrands);
+router.get("/gen", generateProducts);
+router.get("/gencats", genCats);
 
 /**
  * @Desc get all Products
