@@ -81,13 +81,13 @@ const updateCategory = asyncHandler(async (req, res) => {
 // @desc    get single Category by name
 // @route   GET /api/categories/:name
 // @access  Public
-const getCatByName =   (name) => { 
-  const category =  Category.findOne({ name });
+const getCatByName =   async (name) => { 
+  const category =  await Category.findOne({ name });
   if(!category){
 
 return ""
   }
-  return category._id
+  return category
 
 }
 

@@ -136,7 +136,7 @@ const generateProducts = asyncHandler(async (req, res) => {
         images: element.images,
         thumbnail: element.thumbnail,
         price: element.price,
-        category: catController.getCatByName(element.category),
+        category: catController.getCatByName(element.category)._id,
         //brand: element.brand,
         quantity: element.quantity,
       });
