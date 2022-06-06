@@ -118,9 +118,27 @@ const numberOfOrders = asyncHandler(async (req, res) => {
   });
 });
 
+const incomeThisWeek = asyncHandler(async (req, res) => {
+  const incomeThisWeekFilter = Order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: new Date(Date.now() - 7 * ONE_DAY) },
+      },
+    },
+  ]);
+
+  const incomeThisWeek = await incomeThisWeekFilter;
+  const totalIncomeThisWeek = incomeThisWeek.reduce(
+    (acc, order) => acc + (order.price || 0),
+    0
+  );
+  res.status(200).json({ income: totalIncomeThisWeek });
+});
+
 module.exports = {
   countActiveAndDeactivatedUsers,
   countNewUsers,
   countOrdersToday,
   numberOfOrders,
+  incomeThisWeek,
 };
