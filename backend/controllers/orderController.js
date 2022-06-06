@@ -109,28 +109,40 @@ const createOrder = asyncHandler(async (req, res) => {
 
 /**
  * @Desc Update an Order
- * @route PUT api/orders/
+ * @route PUT api/orders/:id
  * @access Private admin
  */
 
 const updateOrder = asyncHandler(async (req, res) => {
   /**
-   * not implemented yet
-   * check the cart logic before implementing
+   * get total from req.body
+   * that will be sent from frontend
+   * then update the order in our database
    */
-  const id = req.params.id;
+  const { id } = req.params;
+  const { total } = req.body;
+  if (exists(id)) {
+    const order = await Order.findOne({ id });
 
-  const order = await Order.findOne({ id });
-  if (!order) {
+    if (!order) {
+      res.status(400);
+      throw new Error("Invalid order");
+    } else {
+      const updated = await Order.findByIdAndUpdate(
+        id,
+        { total },//check later
+        { new: true }
+      );
+      res.status(200).json({
+        message: "Order updated successfully",
+        orig: order,
+        updated,
+      });
+    }
+  } else {
+    // if id is not valid
     res.status(400);
     throw new Error("Invalid order");
-  } else {
-    const updated = await Order.findByIdAndUpdate(id, {});
-    res.status(200).json({
-      message: "Order updated successfully",
-      orig: order,
-      updated,
-    });
   }
 });
 
