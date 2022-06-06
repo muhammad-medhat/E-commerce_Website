@@ -5,6 +5,11 @@ const Order = require("../model/orderModel");
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
+/**
+ * @description get count of active and deactivated users
+ * @route GET api/statistics/active-users
+ * @access Private user
+ */
 const countActiveAndDeactivatedUsers = asyncHandler(async (req, res) => {
   const activeUsersFilter = User.aggregate([
     { $match: { status: "ACTIVE" } },
@@ -29,8 +34,13 @@ const countActiveAndDeactivatedUsers = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * @description get the number of new users in the last 7 days
+ * @route GET api/statistics/new-users
+ * @access Private
+ */
+
 const countNewUsers = asyncHandler(async (req, res) => {
-  // get the number of new customers in the last 7 days
   const newUsersFilter = User.aggregate([
     {
       $match: {
@@ -46,6 +56,12 @@ const countNewUsers = asyncHandler(async (req, res) => {
   });
 });
 
+/**
+ * @description get the number of orders made today
+ * @route GET api/statistics/orders-today
+ * @access Private
+ */
+
 const countOrdersToday = asyncHandler(async (req, res) => {
   const countOrdersTodayFilter = Order.aggregate([
     {
@@ -60,6 +76,12 @@ const countOrdersToday = asyncHandler(async (req, res) => {
   const numberOfOrdersToday = countOfOrdersToday[0]?.ordersToday || 0;
   res.status(200).json({ ordersToday: numberOfOrdersToday });
 });
+
+/**
+ * @description get the total number of orders
+ * @route GET api/statistics/all-orders
+ * @access Private
+ */
 
 const numberOfOrders = asyncHandler(async (req, res) => {
   const numberOfPendingOrdersFilter = Order.aggregate([
@@ -117,6 +139,12 @@ const numberOfOrders = asyncHandler(async (req, res) => {
       countOfDeliveredOrders,
   });
 });
+
+/**
+ * @description get the total income this week
+ * @route GET api/statistics/income-this-week
+ * @access Private
+ */
 
 const incomeThisWeek = asyncHandler(async (req, res) => {
   const incomeThisWeekFilter = Order.aggregate([
