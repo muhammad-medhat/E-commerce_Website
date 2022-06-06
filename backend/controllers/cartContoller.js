@@ -31,7 +31,7 @@ const getCartItems = asyncHandler(async (req, res) => {
 const addItemToCart = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
-
+  // you have to check if the prodct still exists
   const product = await Product.findById(productId);
 
   if (!product) {
