@@ -56,8 +56,8 @@ const countOrdersToday = asyncHandler(async (req, res) => {
     { $count: "ordersToday" },
   ]);
 
-  const countOrdersToday = await countOrdersTodayFilter;
-  const numberOfOrdersToday = countOrdersToday[0]?.ordersToday || 0;
+  const countOfOrdersToday = await countOrdersTodayFilter;
+  const numberOfOrdersToday = countOfOrdersToday[0]?.ordersToday || 0;
   res.status(200).json({ ordersToday: numberOfOrdersToday });
 });
 
@@ -127,8 +127,8 @@ const incomeThisWeek = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const incomeThisWeek = await incomeThisWeekFilter;
-  const totalIncomeThisWeek = incomeThisWeek.reduce(
+  const productsThisWeek = await incomeThisWeekFilter;
+  const totalIncomeThisWeek = productsThisWeek.reduce(
     (acc, order) => acc + (order.price || 0),
     0
   );
