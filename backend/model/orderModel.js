@@ -11,7 +11,9 @@ const orderSchema = mongoose.Schema(
     },
     orderDetails: { type: String },
     archived: { type: Boolean, default: false },
+    total: { type: Number, default: 0.0 },
   },
+  
   { timestamps: true }
 );
 
