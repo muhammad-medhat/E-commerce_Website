@@ -13,7 +13,6 @@ const App = () => {
             <Routes>
                 <Route path='/profile' element={<Orders />} />
             </Routes>
-            <Footer />
         </BrowserRouter>
     )
 }
