@@ -15,21 +15,23 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  let { username, newPassword, password, email } = req.body;
+  let { username, newPassword, password, email, age, address, phone } =
+    req.body;
 
-  if (!username && !newPassword && !password && !email) {
+  if (
+    !username &&
+    !newPassword &&
+    !password &&
+    !email &&
+    !age &&
+    !address &&
+    !phone
+  ) {
     res.status(400);
     throw new Error("No fields to update");
   }
 
-  if (username) {
-    let updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { username },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
-  } else if (email) {
+  if (email) {
     if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
         req.user.id,
@@ -58,6 +60,19 @@ const updateUser = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("Wrong Password");
     }
+  } else {
+    let updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { username, age, address, phone },
+      { new: true }
+    );
+    res.status(200).json({
+      username: updateUser.username,
+      email: updateUser.email,
+      age: updateUser.age,
+      address: updateUser.address,
+      phone: updateUser.phone,
+    });
   }
 });
 
@@ -66,11 +81,11 @@ const updateUser = asyncHandler(async (req, res) => {
 // @access  Public
 
 const regUser = asyncHandler(async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, age, address, phone } = req.body;
 
   if (!username || !password || !email) {
     res.status(400);
-    throw new Error("Please add all fields");
+    throw new Error("Please add all required fields");
   }
   // Check if user exists
   const userExists = await User.findOne({ email });
@@ -87,6 +102,9 @@ const regUser = asyncHandler(async (req, res) => {
     username,
     password: hashedPassword,
     email,
+    age,
+    address,
+    phone,
   });
 
   if (user) {
@@ -99,6 +117,9 @@ const regUser = asyncHandler(async (req, res) => {
       _id: user.id,
       username: user.username,
       email: user.email,
+      age: user.age,
+      address: user.address,
+      phone: user.phone,
       token: generateToken(user._id),
     });
   } else {
@@ -126,37 +147,35 @@ const getUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
- 
+
   // Check for user email
   const user = await User.findOne({ email });
   // checking the user status
-  if(user.status === 'DEACTIVATED'){
+  if (user.status === "DEACTIVATED") {
     res.status(400);
     throw new Error("User is Deactivated");
-   }
-   else if(user.status === 'SUSPENDED'){
+  } else if (user.status === "SUSPENDED") {
     res.status(400);
     throw new Error("User is suspended");
-   }
-   else{
-  // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
-  if (user && (await bcrypt.compare(password, user.password))) {
-    const token = generateToken(user._id);
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      maxAge: maxAge * 1000,
-    });
-    res.json({
-      _id: user.id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
-    });
   } else {
-    res.status(400);
-    throw new Error("Invalid credentials");
+    // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = generateToken(user._id);
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: maxAge * 1000,
+      });
+      res.json({
+        _id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(400);
+      throw new Error("Invalid credentials");
+    }
   }
-}
 });
 
 // @desc    logout a user
@@ -185,7 +204,5 @@ const getUserId = (req) => {
     return id;
   }
 };
-
-
 
 module.exports = { updateUser, regUser, getUser, logoutUser, loginUser };
