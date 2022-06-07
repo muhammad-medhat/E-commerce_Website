@@ -129,7 +129,7 @@ const regUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET a user
-// @route   GET /api/users/user
+// @route   GET /api/users/:id
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
