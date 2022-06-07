@@ -52,35 +52,35 @@ const getOrder = asyncHandler(async (req, res) => {
 });
 
 /**
- * #TODO: check requirements (if the user can archive the order)
- * @Desc Archive an Order
+ * @Desc Cancel an Order
  * @route Delete api/orders/:id
  * @access Private admin
  */
 const archiveOrder = asyncHandler(async (req, res) => {
-  /**
-   * archive order
-   */
-  const id = req.params.id;
-  if (exists(req.params.id)) {
-    const order = await Order.findById(id);
-    const arc = order.archived;
 
-    Order.updateOne({ _id: id }, { archived: !arc }, (err) => {
+  const {id} = req.params;
+  if (exists(id)) {
+    // const order = await Order.findById(id);
+    // const arc = order.archived;
+
+    Order.updateOne({ _id: id }, { archived: true }, (err) => {
       if (err) {
         res.json({
           statusCode: 400,
           message: err.message,
         });
       } else {
-        console.log(req);
         res.json({
           statusCode: 200,
-          message: "Order archived",
-          order,
+          message: "Order archived"
           
         });
       }
+    });
+  } else {  
+    res.json({
+      statusCode: 404,
+      message: "Order not found"
     });
   }
 });
@@ -109,27 +109,40 @@ const createOrder = asyncHandler(async (req, res) => {
 
 /**
  * @Desc Update an Order
- * @route PUT api/orders/
+ * @route PUT api/orders/:id
  * @access Private admin
  */
 
 const updateOrder = asyncHandler(async (req, res) => {
   /**
-   * not implemented yet
+   * get total from req.body
+   * that will be sent from frontend
+   * then update the order in our database
    */
-  const id = req.params.id;
+  const { id } = req.params;
+  const { total } = req.body;
+  if (exists(id)) {
+    const order = await Order.findOne({ id });
 
-  const order = await Order.findOne({ id });
-  if (!order) {
+    if (!order) {
+      res.status(400);
+      throw new Error("Invalid order");
+    } else {
+      const updated = await Order.findByIdAndUpdate(
+        id,
+        { total },//check later
+        { new: true }
+      );
+      res.status(200).json({
+        message: "Order updated successfully",
+        orig: order,
+        updated,
+      });
+    }
+  } else {
+    // if id is not valid
     res.status(400);
     throw new Error("Invalid order");
-  } else {
-    const updated = await Order.findByIdAndUpdate(id, {});
-    res.status(200).json({
-      message: "Order updated successfully",
-      orig: order,
-      updated,
-    });
   }
 });
 

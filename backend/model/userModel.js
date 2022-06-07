@@ -11,6 +11,9 @@ const userSchema = mongoose.Schema(
       require: true,
       default: "ACTIVE",
     },
+    age: { type: Number },
+    address: { type: String },
+    phone: { type: String },
   },
   { timestamps: true }
 );

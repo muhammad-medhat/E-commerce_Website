@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const orderSchema = mongoose.Schema(
   {
-    status: { type: String, default: "pending" },
+    status: {
+      type: String,
+      enum: ["pending", "in review", "in progress", "on the way", "delivered"],
+      default: "pending",
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -11,7 +15,9 @@ const orderSchema = mongoose.Schema(
     },
     orderDetails: { type: String },
     archived: { type: Boolean, default: false },
+    total: { type: Number, default: 0.0 },
   },
+
   { timestamps: true }
 );
 
