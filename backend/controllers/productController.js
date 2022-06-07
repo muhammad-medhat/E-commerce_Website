@@ -11,6 +11,9 @@ const ProductM = require("../model/productMModel");
 const Category = require("../model/categoryModel");
 const Brand = require("../model/brandModel");
 const catController = require("../controllers/categoryController");
+const User = require("../model/userModel");
+const MailService = require("../utilities/mailServices");
+const mailService = new MailService();
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
@@ -105,8 +108,32 @@ const createProduct = asyncHandler(async (req, res) => {
       handling,
     });
     await newProduct.save();
+    User.find({}, function(err, allUsers){
+      if(err){
+          console.log(err);
+      }
+      let mailList = [];
+      allUsers.forEach(function(users){
+          mailList.push(users.email);
+          return mailList;
+      });
+      const productMailed = {
+        name: newProduct.name,
+        description:newProduct.description,
+        image:newProduct.mainImage,
+        price:newProduct.price
+      };
+  
+      let mailInfo = {
+              to: mailList,
+              subject: " Our latest arrivals",
+              template: "productArrivals",
+              context: productMailed,
+          };
+        mailService.sendMail(mailInfo);
+  });
     res.status(201).json({
-      message: "Product created",
+      message: "Product created and an email has been sent to all users",
       newProduct,
     });
   }
