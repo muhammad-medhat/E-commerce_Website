@@ -118,8 +118,17 @@ const createProduct = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, description, image, price, category, brand, quantityInStock } =
-    req.body;
+  const {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    deliveryTime,
+  } = req.body;
 
   const id = req.params.id;
 
@@ -129,13 +138,15 @@ const updateProduct = asyncHandler(async (req, res) => {
     throw new Error("Invalid product");
   } else {
     const updated = await Product.findByIdAndUpdate(id, {
-      name: name,
-      description: description,
-      image: image,
-      price: price,
-      category: category,
-      brand: brand,
-      quantityInStock: quantityInStock,
+      name,
+      description,
+      images,
+      mainImage,
+      price,
+      category,
+      brand,
+      quantityInStock,
+      deliveryTime,
     });
     res.status(200).json({
       message: "Product updated successfully",
