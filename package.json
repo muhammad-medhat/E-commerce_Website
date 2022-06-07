@@ -18,7 +18,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.4",
-    "node-fetch": "^3.2.5"
+    "node-fetch": "^3.2.5",
+    "stripe": "^9.6.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
