@@ -67,22 +67,33 @@ const deleteProduct = asyncHandler(async (req, res) => {
  * @access  Private Admin
  */
 const createProduct = asyncHandler(async (req, res) => {
-  const product = req.body;
+  // const product = req.body;
+  const { name, description, images, mainImage, price, category, brand, quantityInStock, stock, handling } = req.body;
 
-  product = await Product.create({
-    name: product.name,
-    description: product.description,
-    images: product.images,
-    price: product.price,
-    category: product.category,
-    brand: product.brand,
-    quantityInStock: product.quantityInStock,
-  });
+  const productCheck = Product.find({ name });
+  if (productCheck) {
+    res.status(400).json({
+      message: "Product already exists",
+    });
+  } else {
+  const product = await Product.create({
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    stock,
+    handling,
+  } );
   res.json({
     code: res.statusCode,
     message: "Product created",
     product,
   });
+  }
 });
 
 /**

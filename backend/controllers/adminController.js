@@ -142,7 +142,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 /**
  * @description Update Order State
- * @route POST /api/admin/orders/:id/status
+ * @route PUT /api/admin/orders/:id/status
  * @access Private
  */
 

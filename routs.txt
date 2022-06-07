@@ -81,8 +81,6 @@ Orders
 
 
  ==========================================================================
-<<<<<<< HEAD
-=======
  brands
 
 /**
@@ -127,7 +125,6 @@ Orders
  * */
 
 
->>>>>>> brands
  ==========================================================================
  ==========================================================================
  ==========================================================================
@@ -141,5 +138,24 @@ Orders
  
  Admin routes
 
-// @desc    GET all Users
-// @route   Get /api/admin/users
+
+/**
+ * @desc Get all orders
+ * @route GET /api/admin/orders
+ * @access Private
+ */
+
+/**
+ * @desc Get single order
+ * @route GET /api/admin/orders/:id
+ * @access Private
+ */
+ router.get("/orders/:id", verifyAdmin, getSingleOrder);
+
+ /**
+ * @desc Change order status
+ * @route PUT /api/admin/orders/:id/status
+ * req.body = { status }
+
+ * @access Private
+ */
