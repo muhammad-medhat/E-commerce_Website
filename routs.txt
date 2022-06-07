@@ -81,6 +81,53 @@ Orders
 
 
  ==========================================================================
+<<<<<<< HEAD
+=======
+ brands
+
+/**
+ * @desc    Create Brand
+ * @route   POST /api/brand/
+ * @access  Private
+ * body = {name}
+ */
+
+
+/**
+ *  @desc    get all Brand
+ *  @route   GET /api/brand/
+ *  @access  Public
+ * */
+
+
+ * @desc    Delete Brand
+ * @route   DELETE /api/brand/:id
+ * @access  Private
+ * */
+
+
+/**
+ * @desc    update Brand
+ * @route   PUT /api/brand/:id
+ * @access  Private
+ * */
+
+/**
+ *  @desc    Get a Single Brand
+ *  @route   GET /api/brand/:id
+ *  @access  Public
+ * */
+
+
+
+/**
+ *  @desc    Get Brand products
+ *  @route   GET /api/brand/:id/products
+ *  @access  Public
+ * */
+
+
+>>>>>>> brands
  ==========================================================================
  ==========================================================================
  ==========================================================================
