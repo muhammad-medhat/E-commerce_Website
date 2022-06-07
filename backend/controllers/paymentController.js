@@ -13,7 +13,7 @@ const stripeCheckout = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  if (!(user.status === "ACTIVE")) {
+  if (user.status !== "ACTIVE") {
     res.status(400);
     throw new Error("User account is not active");
   } else {
