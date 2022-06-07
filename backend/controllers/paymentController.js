@@ -2,6 +2,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
+const User = require("../model/userModel");
 
 const stripeCheckout = asyncHandler(async (req, res) => {
   const { items } = req.body;
@@ -12,7 +13,7 @@ const stripeCheckout = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  if (!user.status.equals("ACTIVE")) {
+  if (!(user.status === "ACTIVE")) {
     res.status(400);
     throw new Error("User account is not active");
   } else {
