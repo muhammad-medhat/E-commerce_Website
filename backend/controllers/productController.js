@@ -108,30 +108,30 @@ const createProduct = asyncHandler(async (req, res) => {
       handling,
     });
     await newProduct.save();
-    User.find({}, function(err, allUsers){
-      if(err){
-          console.log(err);
+    User.find({}, function (err, allUsers) {
+      if (err) {
+        console.log(err);
       }
       let mailList = [];
-      allUsers.forEach(function(users){
-          mailList.push(users.email);
-          return mailList;
+      allUsers.forEach(function (users) {
+        mailList.push(users.email);
+        return mailList;
       });
       const productMailed = {
         name: newProduct.name,
-        description:newProduct.description,
-        image:newProduct.mainImage,
-        price:newProduct.price
+        description: newProduct.description,
+        image: newProduct.mainImage,
+        price: newProduct.price,
       };
-  
+
       let mailInfo = {
-              to: mailList,
-              subject: " Our latest arrivals",
-              template: "productArrivals",
-              context: productMailed,
-          };
-        mailService.sendMail(mailInfo);
-  });
+        to: mailList,
+        subject: " Our latest arrivals",
+        template: "productArrivals",
+        context: productMailed,
+      };
+      mailService.sendMail(mailInfo);
+    });
     res.status(201).json({
       message: "Product created and an email has been sent to all users",
       newProduct,
@@ -154,7 +154,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
-    deliveryTime,
+    daysTillDelivery,
   } = req.body;
 
   const id = req.params.id;
@@ -173,7 +173,7 @@ const updateProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
-      deliveryTime,
+      daysTillDelivery,
     });
     res.status(200).json({
       message: "Product updated successfully",
