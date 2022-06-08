@@ -56,8 +56,9 @@ const addItemToCart = asyncHandler(async (req, res) => {
   const cartItem = await CartItem.create({
     productId,
     name: product.name,
-    totalPrice: product.price * quantity,
+    totalPrice: product.price,
     quantity,
+    daysTillDelivery: product.daysTillDelivery,
   });
 
   cart = await Cart.findOne({ userId });

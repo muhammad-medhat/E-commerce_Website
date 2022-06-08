@@ -10,6 +10,7 @@ const cartItemSchema = mongoose.Schema({
   totalPrice: { type: Number, require: true },
   quantity: { type: Number, require: true },
   image: { type: String },
+  daysTillDelivery: { type: Number, require: true },
 });
 
 module.exports = mongoose.model("CartItem", cartItemSchema);
