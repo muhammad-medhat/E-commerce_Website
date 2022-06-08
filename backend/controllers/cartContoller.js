@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const req = require("express/lib/request");
 const mongoose = require("mongoose");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
