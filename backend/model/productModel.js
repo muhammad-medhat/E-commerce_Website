@@ -18,9 +18,6 @@ const productSchema = mongoose.Schema({
   },
   quantityInStock: { type: Number, require: true },
   daysTillDelivery: { type: Number, require: true },
-
-  stock: { type: Number, default: 0 },
-  handling: { type: Number, default: 1 },
 });
 
 module.exports = mongoose.model("Product", productSchema);
