@@ -73,11 +73,12 @@ const getCoupon = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error(`Coupon is expired`);
     }
-    if (coupon.usersUsed.has(req.user.id)) {
-      res.status(400);
+    const userId = req.user.id;
+    if (coupon.usersUsed[userId]) {
+      res.status(401);
       throw new Error(`Coupon has already been used`);
     }
-    coupon.usersUsed.add(req.user.id);
+    coupon.usersUsed[userId] = true;
     await coupon.save();
     res.status(200).json(coupon.discount);
   }

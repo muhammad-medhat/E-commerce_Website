@@ -7,9 +7,7 @@ const couponSchema = mongoose.Schema({
   discount: { type: Number },
   usersUsed: {
     type: Object,
-    of: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    default: new Set(),
+    default: {},
   },
 });
 
