@@ -38,7 +38,15 @@ const updateUser = asyncHandler(async (req, res) => {
         { email },
         { new: true }
       );
-      res.status(200).json(updatedUser);
+
+      res.status(200).json({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        age: updatedUser.age,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        status: updatedUser.status,
+      });
     } else {
       res.status(400);
       throw new Error("Wrong password");
@@ -55,7 +63,15 @@ const updateUser = asyncHandler(async (req, res) => {
         },
         { new: true }
       );
-      res.status(200).json(updatedUser);
+
+      res.status(200).json({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        age: updatedUser.age,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        status: updatedUser.status,
+      });
     } else {
       res.status(400);
       throw new Error("Wrong Password");
@@ -66,12 +82,13 @@ const updateUser = asyncHandler(async (req, res) => {
       { username, age, address, phone },
       { new: true }
     );
+
     res.status(200).json({
-      username: updateUser.username,
-      email: updateUser.email,
-      age: updateUser.age,
-      address: updateUser.address,
-      phone: updateUser.phone,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      age: updatedUser.age,
+      address: updatedUser.address,
+      phone: updatedUser.phone,
     });
   }
 });
