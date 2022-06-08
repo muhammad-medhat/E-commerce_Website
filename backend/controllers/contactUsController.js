@@ -34,7 +34,7 @@ const customerQuery = asyncHandler(async (req, res) => {
   
 const getAllCustomers = asyncHandler(async (req, res) => {
 
-    const customer = await ContactUs.find({}).select('email comment createdAt -_id');
+    const customer = await ContactUs.find({});
     
     res.status(200).json( customer );
 });
