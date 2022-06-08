@@ -133,11 +133,13 @@ const regUser = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, username, email } = await User.findById(req.params.id);
+  const { username, email, phone, address, age } = req.user;
   res.status(200).json({
-    id: _id,
     username,
     email,
+    phone,
+    address,
+    age,
   });
 });
 
