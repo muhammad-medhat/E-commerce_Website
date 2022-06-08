@@ -47,7 +47,7 @@ router.get("/:id", getProduct);
  * @Desc Create Product
  * @route POST api/products /
  * * @access  Private
-
+*/
 router.post("/", verifyAdmin, createProduct);
 
 /**
