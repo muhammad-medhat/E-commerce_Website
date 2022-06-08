@@ -4,15 +4,18 @@ import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
 import { Navbar } from './components';
 import Footer from './components/Footer/Footer.js';
-import Orders from './pages/Orders/Orders';
+import UserInfo from './pages/Informations/UserInfo'
+import Home from'./pages/home/Home'
 
 const App = () => {
     return (
         <BrowserRouter>
             <Navbar />
             <Routes>
-                <Route path='/profile' element={<Orders />} />
+                <Route path='/profile' element={<UserInfo />} />
+                <Route path='/Home' element={<Home/>} />
             </Routes>
+            <Footer/>
         </BrowserRouter>
     )
 }
