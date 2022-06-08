@@ -14,13 +14,6 @@ const createCategory = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add all fields");
   }
-  // Check if category exists
-  const categoryExists = await Category.findOne({ name });
-
-  if (categoryExists) {
-    res.status(400);
-    throw new Error("category already exists");
-  }
 
   const category = await Category.create({
     name,
