@@ -85,20 +85,14 @@ const updateBrand = asyncHandler(async (req, res) => {
 
 const viewBrand = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  const brand = await Brand.findById(id);
 
-  const brand = await Brand.find({ _id: id });
-
-  if (!exists(id)) {
-    res.status(404).json({
-      message: "Brand not found",
-      code: res.statusCode,
-    });
-  } else {
-    res.status(200).json({
-      code: 200,
-      brand: brand,
-    });
+  if (!brand) {
+    res.status(400);
+    throw new Error("This brand ID doesn't exist");
   }
+
+  res.status(200).json({ brand: brand });
 });
 
 /**
