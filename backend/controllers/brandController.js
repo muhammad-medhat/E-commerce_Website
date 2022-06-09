@@ -92,7 +92,7 @@ const viewBrand = asyncHandler(async (req, res) => {
     throw new Error("This brand ID doesn't exist");
   }
 
-  res.status(200).json({ brand: brand });
+  res.status(200).json(brand);
 });
 
 /**
