@@ -21,7 +21,11 @@ const mailService = new MailService();
  */
 
 const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.aggregate([
+    {
+      $match: { quantityInStock: { $gt: 0 } },
+    },
+  ]);
   res.status(200).json({
     products,
   });
