@@ -14,13 +14,6 @@ const createBrand = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add name");
   }
-  // Check if brand exists
-  const brandExists = await Brand.findOne({ name });
-
-  if (brandExists) {
-    res.status(400);
-    throw new Error("brand already exists");
-  }
 
   const brand = await Brand.create({
     name,
@@ -92,20 +85,14 @@ const updateBrand = asyncHandler(async (req, res) => {
 
 const viewBrand = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  const brand = await Brand.findById(id);
 
-  const brand = await Brand.find({ _id: id });
-
-  if (!exists(id)) {
-    res.status(404).json({
-      message: "Brand not found",
-      code: res.statusCode,
-    });
-  } else {
-    res.status(200).json({
-      code: 200,
-      brand: brand,
-    });
+  if (!brand) {
+    res.status(400);
+    throw new Error("This brand ID doesn't exist");
   }
+
+  res.status(200).json(brand);
 });
 
 /**
@@ -116,14 +103,17 @@ const viewBrand = asyncHandler(async (req, res) => {
 
 const getBrandProducts = asyncHandler(async (req, res) => {
   const brandId = req.params.id;
-  const brand = await Brand.find({ _id: brandId });
-  if (exists(brandId)) {
-    const products = await Product.find({
-      brand: mongoose.Types.ObjectId(brandId),
-    });
-
-    res.status(200).json({ ...brand, products });
+  const brand = await Brand.findById(brandId);
+  if (!brand) {
+    res.status(400);
+    throw new Error("This brand ID doesn't exist");
   }
+
+  const products = await Product.find({
+    brand: brandId,
+  });
+
+  res.status(200).json({ brand: brand.name, products });
 });
 
 function exists(id) {

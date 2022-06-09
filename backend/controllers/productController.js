@@ -21,7 +21,11 @@ const mailService = new MailService();
  */
 
 const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.aggregate([
+    {
+      $match: { quantityInStock: { $gt: 0 } },
+    },
+  ]);
   res.status(200).json({
     products,
   });
@@ -50,22 +54,12 @@ const getProduct = asyncHandler(async (req, res) => {
  * */
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  Product.findByIdAndUpdate(
-    id,
-    { quantityInStock: 0 },
-    { new: true },
-    (err, product) => {
-      if (err) {
-        res.status(400).json({
-          message: "Product not found",
-        });
-      }
-      res.status(200).json({
-        message: "Product deleted",
-        product,
-      });
-    }
-  );
+  const product = await Product.findByIdAndUpdate(id, { quantityInStock: 0 });
+  if (!product) {
+    res.status(400);
+    throw new Error("The product you are trying to delete doesn't exist");
+  }
+  res.json(product);
 });
 
 /**
@@ -84,8 +78,6 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
-    stock,
-    handling,
   } = req.body;
 
   //check if product exists
@@ -104,8 +96,6 @@ const createProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
-      stock,
-      handling,
     });
     await newProduct.save();
     User.find({}, function (err, allUsers) {
@@ -159,28 +149,24 @@ const updateProduct = asyncHandler(async (req, res) => {
 
   const id = req.params.id;
 
-  const product = await Product.findOne({ id });
+  const product = await Product.findByIdAndUpdate(id, {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  });
+
   if (!product) {
     res.status(400);
-    throw new Error("Invalid product");
-  } else {
-    const updated = await Product.findByIdAndUpdate(id, {
-      name,
-      description,
-      images,
-      mainImage,
-      price,
-      category,
-      brand,
-      quantityInStock,
-      daysTillDelivery,
-    });
-    res.status(200).json({
-      message: "Product updated successfully",
-      orig: product,
-      updated,
-    });
+    throw new Error("The product you are trying to update doesn't exist");
   }
+
+  res.status(200).json(product);
 });
 
 /**

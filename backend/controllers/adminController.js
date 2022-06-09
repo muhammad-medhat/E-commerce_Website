@@ -77,23 +77,26 @@ const updateUserPassword = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
-   
-      const userPassword = {
-        name: user.username,
-        password: password,
-      };
 
-      const mailInfo = {
-        to: req.body.email,
-        subject: " your new password",
-        template: "passwordUpdate",
-        context: userPassword,
-      };
+    const userPassword = {
+      name: user.username,
+      password: password,
+    };
 
-      mailService.sendMail(mailInfo);
-      res.status(200).json({ message: "Password updated successfully and the email has been sent!" });
+    const mailInfo = {
+      to: req.body.email,
+      subject: " your new password",
+      template: "passwordUpdate",
+      context: userPassword,
+    };
+
+    mailService.sendMail(mailInfo);
+    res
+      .status(200)
+      .json({
+        message: "Password updated successfully and the email has been sent!",
+      });
   }
-  
 });
 
 /**
@@ -108,12 +111,9 @@ const changeUserStatus = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(400);
     throw new Error("Invalid user email");
-  } else {
-    await User.findByIdAndUpdate(user.id, { status });
-    res
-      .status(200)
-      .json({ message: `Status updated successfully to ${status}`, user });
   }
+  await User.findByIdAndUpdate(user.id, { status });
+  res.status(200).json({ message: `Status updated successfully to ${status}` });
 });
 
 /**
