@@ -40,7 +40,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 // @access  Private
 
 const logoutAdmin = asyncHandler(async (req, res) => {
-  res.cookie("jwt", "", { maxAge: 1 / 60 });
+  res.cookie("jwt", "", { maxAge: 1 });
   res.redirect("/");
 });
 
