@@ -17,10 +17,7 @@ const productSchema = mongoose.Schema({
     ref: "Brand",
   },
   quantityInStock: { type: Number, require: true },
-  deliveryTime: { type: Date, require: true },  
-  
-  stock:{type:Number, default:0},
-  handling: { type: Number, default: 1},
+  daysTillDelivery: { type: Number, require: true },
 });
 
 module.exports = mongoose.model("Product", productSchema);

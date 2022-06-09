@@ -14,13 +14,6 @@ const createCategory = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add all fields");
   }
-  // Check if category exists
-  const categoryExists = await Category.findOne({ name });
-
-  if (categoryExists) {
-    res.status(400);
-    throw new Error("category already exists");
-  }
 
   const category = await Category.create({
     name,
@@ -88,13 +81,13 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 const getCategoryProducts = asyncHandler(async (req, res) => {
   const categoryId = req.params.id;
-  const category = await Category.find({ _id: categoryId });
+  const category = await Category.findById(categoryId);
   if (exists(categoryId)) {
     const products = await Product.find({
-      category: mongoose.Types.ObjectId(categoryId),
+      category: categoryId,
     });
 
-    res.status(200).json({ ...category, products });
+    res.status(200).json({ category: category.name, products });
   }
 });
 

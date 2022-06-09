@@ -1,5 +1,5 @@
 const fetch = (...args) =>
-import('node-fetch').then(({ default: fetch }) => fetch(...args));
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -11,6 +11,9 @@ const ProductM = require("../model/productMModel");
 const Category = require("../model/categoryModel");
 const Brand = require("../model/brandModel");
 const catController = require("../controllers/categoryController");
+const User = require("../model/userModel");
+const MailService = require("../utilities/mailServices");
+const mailService = new MailService();
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
@@ -18,7 +21,11 @@ const catController = require("../controllers/categoryController");
  */
 
 const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.aggregate([
+    {
+      $match: { quantityInStock: { $gt: 0 } },
+    },
+  ]);
   res.status(200).json({
     products,
   });
@@ -47,36 +54,22 @@ const getProduct = asyncHandler(async (req, res) => {
  * */
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  Product.findByIdAndUpdate(id, { quantityInStock: 0 }, { new: true }, (err, product) => {
-    if (err) {
-      res.status(400).json({
-        message: "Product not found",
-      });
-    }
-    res.status(200).json({
-      message: "Product deleted",
-      product,
-    });
-  });
+  const product = await Product.findByIdAndUpdate(id, { quantityInStock: 0 });
+  if (!product) {
+    res.status(400);
+    throw new Error("The product you are trying to delete doesn't exist");
+  }
+  res.json(product);
 });
-      
 
 /**
  * @desc    Create product
- * @route   POST /api/products/:id
+ * @route   POST /api/products/
  * @access  Private Admin
  */
 const createProduct = asyncHandler(async (req, res) => {
   // const product = req.body;
-  const { name, description, images, mainImage, price, category, brand, quantityInStock, stock, handling } = req.body;
-
-  const productCheck = Product.find({ name });
-  if (productCheck) {
-    res.status(400).json({
-      message: "Product already exists",
-    });
-  } else {
-  const product = await Product.create({
+  const {
     name,
     description,
     images,
@@ -85,14 +78,54 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
-    stock,
-    handling,
-  } );
-  res.json({
-    code: res.statusCode,
-    message: "Product created",
-    product,
-  });
+  } = req.body;
+
+  //check if product exists
+  const product = await Product.findOne({ name });
+  if (product) {
+    res.status(400).json({
+      message: "Product already exists",
+    });
+  } else {
+    const newProduct = new Product({
+      name,
+      description,
+      images,
+      mainImage,
+      price,
+      category,
+      brand,
+      quantityInStock,
+    });
+    await newProduct.save();
+    User.find({}, function (err, allUsers) {
+      if (err) {
+        console.log(err);
+      }
+      let mailList = [];
+      allUsers.forEach(function (users) {
+        mailList.push(users.email);
+        return mailList;
+      });
+      const productMailed = {
+        name: newProduct.name,
+        description: newProduct.description,
+        image: newProduct.mainImage,
+        price: newProduct.price,
+      };
+
+      let mailInfo = {
+        to: mailList,
+        subject: " Our latest arrivals",
+        template: "productArrivals",
+        context: productMailed,
+      };
+      mailService.sendMail(mailInfo);
+    });
+    res.status(201).json({
+      message: "Product created and an email has been sent to all users",
+      newProduct,
+    });
   }
 });
 
@@ -102,31 +135,38 @@ const createProduct = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, description, image, price, category, brand, quantityInStock } =
-    req.body;
+  const {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  } = req.body;
 
   const id = req.params.id;
 
-  const product = await Product.findOne({ id });
+  const product = await Product.findByIdAndUpdate(id, {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  });
+
   if (!product) {
     res.status(400);
-    throw new Error("Invalid product");
-  } else {
-    const updated = await Product.findByIdAndUpdate(id, {
-      name: name,
-      description: description,
-      image: image,
-      price: price,
-      category: category,
-      brand: brand,
-      quantityInStock: quantityInStock,
-    });
-    res.status(200).json({
-      message: "Product updated successfully",
-      orig: product,
-      updated,
-    });
+    throw new Error("The product you are trying to update doesn't exist");
   }
+
+  res.status(200).json(product);
 });
 
 /**
@@ -134,47 +174,44 @@ const updateProduct = asyncHandler(async (req, res) => {
  */
 const generateProducts = asyncHandler(async (req, res) => {
   // res.json({ message: "generating products" });
-  const products =[]
-  fetch('https://dummyjson.com/products')
-  .then(res => res.json())
-  .then(data => {
-    Array.from(data.products).forEach( async element => {
-      const product = await ProductM.create({
-        name: element.title,
-        description: element.description,
-        images: element.images,
-        thumbnail: element.thumbnail,
-        price: element.price,
-        category: catController.getCatByName(element.category)._id,
-        //brand: element.brand,
-        quantity: element.quantity,
+  const products = [];
+  fetch("https://dummyjson.com/products")
+    .then((res) => res.json())
+    .then((data) => {
+      Array.from(data.products).forEach(async (element) => {
+        const product = await ProductM.create({
+          name: element.title,
+          description: element.description,
+          images: element.images,
+          thumbnail: element.thumbnail,
+          price: element.price,
+          category: catController.getCatByName(element.category)._id,
+          //brand: element.brand,
+          quantity: element.quantity,
+        });
+        products.push(product);
       });
-      products.push(product);
+      res.json({
+        message: "products generated",
+        products,
+        data,
+      });
     });
-    res.json({ 
-      message: "products generated",
-      products,
-      data
-     });
-  });
 });
-
 
 const genCats = asyncHandler(async (req, res) => {
   //res.json({ message: "generating categories" });
 
-  fetch('https://dummyjson.com/products/categories')
-  .then(res => res.json())
-  .then(dt=>{
-    dt.forEach(async (item) => {
-      const category = await Category.create({
-        name: item,
+  fetch("https://dummyjson.com/products/categories")
+    .then((res) => res.json())
+    .then((dt) => {
+      dt.forEach(async (item) => {
+        const category = await Category.create({
+          name: item,
+        });
       });
+      res.json({ dt });
     });
-    res.json({dt})
-  });
-    
-
 });
 const getCats = asyncHandler(async (req, res) => {
   const categories = await Category.find();
@@ -194,5 +231,6 @@ module.exports = {
   getCats,
   getBrands,
 
-  generateProducts, genCats,
+  generateProducts,
+  genCats,
 };

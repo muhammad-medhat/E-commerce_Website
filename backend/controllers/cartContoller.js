@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const req = require("express/lib/request");
 const mongoose = require("mongoose");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
@@ -7,7 +6,7 @@ const CartItem = require("../model/cartItemModel");
 
 // Create cart utility function
 const createCart = asyncHandler(async (id) => {
-  await Cart.create({
+  return Cart.create({
     userId: id,
     items: new Array(),
   });
@@ -18,10 +17,11 @@ const createCart = asyncHandler(async (id) => {
 // @access  private
 const getCartItems = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const cart = await Cart.findOne({ userId });
+  let cart = await Cart.findOne({ userId });
   if (!cart) {
-    createCart(userId);
+    cart = await createCart(userId);
   }
+
   res.json(cart.items);
 });
 
@@ -31,7 +31,7 @@ const getCartItems = asyncHandler(async (req, res) => {
 const addItemToCart = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
-  // you have to check if the prodct still exists
+  // you have to check if the product still exists
   const product = await Product.findById(productId);
 
   if (!product) {
@@ -41,7 +41,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
 
   let cart = await Cart.findOne({ userId });
   if (!cart) {
-    createCart(userId);
+    cart = await createCart(userId);
   }
 
   if (
@@ -57,11 +57,11 @@ const addItemToCart = asyncHandler(async (req, res) => {
   const cartItem = await CartItem.create({
     productId,
     name: product.name,
-    totalPrice: product.price * quantity,
+    totalPrice: product.price,
     quantity,
+    daysTillDelivery: product.daysTillDelivery,
   });
 
-  cart = await Cart.findOne({ userId });
   // If the cart item already exists in the cart update it
   cart.items = cart.items.filter((item) => !item.productId.equals(productId));
   cart.items.push(cartItem);
@@ -80,11 +80,10 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
   if (!cart) {
     res.status(400);
     throw new Error("Can't remove a product from a cart that doesn't exist");
-  } else {
-    cart.items = cart.items.filter((item) => !item.productId.equals(productId));
-    await cart.save();
-    res.json(cart.items);
   }
+  cart.items = cart.items.filter((item) => !item.productId.equals(productId));
+  await cart.save();
+  res.json(cart.items);
 });
 
 module.exports = { addItemToCart, removeItemFromCart, getCartItems };

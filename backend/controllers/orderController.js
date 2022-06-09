@@ -57,8 +57,7 @@ const getOrder = asyncHandler(async (req, res) => {
  * @access Private admin
  */
 const archiveOrder = asyncHandler(async (req, res) => {
-
-  const {id} = req.params;
+  const { id } = req.params;
   if (exists(id)) {
     // const order = await Order.findById(id);
     // const arc = order.archived;
@@ -72,15 +71,14 @@ const archiveOrder = asyncHandler(async (req, res) => {
       } else {
         res.json({
           statusCode: 200,
-          message: "Order archived"
-          
+          message: "Order archived",
         });
       }
     });
-  } else {  
+  } else {
     res.json({
       statusCode: 404,
-      message: "Order not found"
+      message: "Order not found",
     });
   }
 });
@@ -119,24 +117,21 @@ const updateOrder = asyncHandler(async (req, res) => {
    * that will be sent from frontend
    * then update the order in our database
    */
-  const { id } = req.params;
-  const { total } = req.body;
-  if (exists(id)) {
-    const order = await Order.findOne({ id });
 
-    if (!order) {
-      res.status(400);
-      throw new Error("Invalid order");
-    } else {
+  const { id } = req.params;
+
+  if (exists(id)) {
+    //get items from cart
+    const { total, items } = req.body;
+    if (items.length > 0) {
       const updated = await Order.findByIdAndUpdate(
         id,
-        { total },//check later
+        { total, orderDetails: items },
         { new: true }
       );
       res.status(200).json({
         message: "Order updated successfully",
-        orig: order,
-        updated,
+        order: updated,
       });
     }
   } else {
@@ -146,14 +141,27 @@ const updateOrder = asyncHandler(async (req, res) => {
   }
 });
 
-const getCats = asyncHandler(async (req, res) => {
-  const categories = await Category.find();
-  res.status(200).json({ categories });
+//checkout order
+const checkoutOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { total, address } = req.body;
+  if (exists(id)) {
+    const order = await Order.findByIdAndUpdate(
+      id,
+      { total, shippingAddress, status: "in review" },
+      { new: true }
+    );
+    res.status(200).json({
+      message: "Order updated successfully",
+      order: order,
+    });
+  } else {
+    // if id is not valid
+    res.status(400);
+    throw new Error("Invalid order");
+  }
 });
-const getBrands = asyncHandler(async (req, res) => {
-  const brands = await Brand.find();
-  res.status(200).json({ brands });
-});
+
 function exists(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
@@ -164,6 +172,4 @@ module.exports = {
   updateOrder,
   createOrder,
   archiveOrder,
-  getCats,
-  getBrands,
 };

@@ -31,49 +31,42 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error("No fields to update");
   }
 
-  if (email) {
-    if (await bcrypt.compare(password, user.password)) {
-      let updatedUser = await User.findByIdAndUpdate(
+  const canUpdateEmailAndPassword = password
+    ? await bcrypt.compare(password, user.password)
+    : false;
+
+  let updatedUser;
+  if (email || newPassword) {
+    if (canUpdateEmailAndPassword) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = newPassword
+        ? await bcrypt.hash(newPassword, salt)
+        : undefined;
+
+      updatedUser = await User.findByIdAndUpdate(
         req.user.id,
-        { email },
+        { email, password: hashedPassword },
         { new: true }
       );
-      res.status(200).json(updatedUser);
     } else {
       res.status(400);
       throw new Error("Wrong password");
     }
-  } else if (newPassword) {
-    // Encrypting password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    if (await bcrypt.compare(password, user.password)) {
-      let updatedUser = await User.findByIdAndUpdate(
-        req.user.id,
-        {
-          password: hashedPassword,
-        },
-        { new: true }
-      );
-      res.status(200).json(updatedUser);
-    } else {
-      res.status(400);
-      throw new Error("Wrong Password");
-    }
-  } else {
-    let updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { username, age, address, phone },
-      { new: true }
-    );
-    res.status(200).json({
-      username: updateUser.username,
-      email: updateUser.email,
-      age: updateUser.age,
-      address: updateUser.address,
-      phone: updateUser.phone,
-    });
   }
+
+  updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { username, age, address, phone },
+    { new: true }
+  );
+
+  res.status(200).json({
+    username: updatedUser.username,
+    email: updatedUser.email,
+    age: updatedUser.age,
+    address: updatedUser.address,
+    phone: updatedUser.phone,
+  });
 });
 
 // @desc    Register User
@@ -133,11 +126,13 @@ const regUser = asyncHandler(async (req, res) => {
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, username, email } = await User.findById(req.params.id);
+  const { username, email, phone, address, age } = req.user;
   res.status(200).json({
-    id: _id,
     username,
     email,
+    phone,
+    address,
+    age,
   });
 });
 
@@ -150,31 +145,32 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Check for user email
   const user = await User.findOne({ email });
-  // checking the user status
-  if (user.status === "DEACTIVATED") {
-    res.status(400);
-    throw new Error("User is Deactivated");
-  } else if (user.status === "SUSPENDED") {
-    res.status(400);
-    throw new Error("User is suspended");
-  } else {
-    // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = generateToken(user._id);
-      res.cookie("jwt", token, {
-        httpOnly: true,
-        maxAge: maxAge * 1000,
-      });
-      res.json({
-        _id: user.id,
-        name: user.name,
-        email: user.email,
-        token: generateToken(user._id),
-      });
-    } else {
+
+  if (user && (await bcrypt.compare(password, user.password))) {
+    // check the user status
+    if (user.status === "DEACTIVATED") {
       res.status(400);
-      throw new Error("Invalid credentials");
+      throw new Error("User is Deactivated");
+    } else if (user.status === "SUSPENDED") {
+      res.status(400);
+      throw new Error("User is suspended");
     }
+
+    const token = generateToken(user._id);
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: maxAge * 1000,
+    });
+
+    res.status(200).json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid credentials");
   }
 });
 

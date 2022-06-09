@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const Admin = require("../model/adminModel");
 const User = require("../model/userModel");
 const Order = require("../model/orderModel");
+const MailService = require("../utilities/mailServices");
+const mailService = new MailService();
 
 // @desc    Admin log in
 // @route   POST /api/admin/login
@@ -63,10 +65,10 @@ const getAllUsers = asyncHandler(async (req, res) => {
  * @access  Private
  */
 
-
 const updateUserPassword = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (!user) {
     res.status(400);
     throw new Error("Invalid user email");
@@ -75,7 +77,25 @@ const updateUserPassword = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
-    res.status(200).json({ message: "Password updated successfully" });
+
+    const userPassword = {
+      name: user.username,
+      password: password,
+    };
+
+    const mailInfo = {
+      to: req.body.email,
+      subject: " your new password",
+      template: "passwordUpdate",
+      context: userPassword,
+    };
+
+    mailService.sendMail(mailInfo);
+    res
+      .status(200)
+      .json({
+        message: "Password updated successfully and the email has been sent!",
+      });
   }
 });
 
@@ -91,14 +111,10 @@ const changeUserStatus = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(400);
     throw new Error("Invalid user email");
-  } else {
-    await User.findByIdAndUpdate(user.id, { status });
-    res
-      .status(200)
-      .json({ message: `Status updated successfully to ${status}`,user });
   }
+  await User.findByIdAndUpdate(user.id, { status });
+  res.status(200).json({ message: `Status updated successfully to ${status}` });
 });
-
 
 /**
  * @desc Get all orders
@@ -106,14 +122,13 @@ const changeUserStatus = asyncHandler(async (req, res) => {
  * @access Private
  */
 const getAllOrders = asyncHandler(async (req, res) => {
-
   if (!req.admin) {
     res.status(400).json({
       code: res.statusCode,
       message: "Please login to see your orders",
     });
   } else {
-    const orders = await Order.find({ });
+    const orders = await Order.find({});
     res.status(200).json({
       num: orders.length,
       orders,
@@ -126,7 +141,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
  * @route GET /api/admin/orders/:id
  * @access Private
  */
- const getSingleOrder = asyncHandler(async (req, res) => {
+const getSingleOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (!req.admin) {
     res.status(400).json({
@@ -134,7 +149,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
       message: "Please login to see your orders",
     });
   } else {
-    const orders = await Order.find({_id: id });
+    const orders = await Order.find({ _id: id });
     res.status(200).json({
       orders,
     });
@@ -142,11 +157,11 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 /**
  * @description Update Order State
- * @route PUT /api/admin/orders/:id/status
+ * @route POST /api/admin/orders/:id/status
  * @access Private
  */
 
- const changeOrderStatus = asyncHandler(async (req, res) => {
+const changeOrderStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;
   const { id } = req.params;
   const order = await Order.findOne({ id });
@@ -157,10 +172,9 @@ const getAllOrders = asyncHandler(async (req, res) => {
     await Order.findByIdAndUpdate(id, { status });
     res
       .status(200)
-      .json({ message: `Status updated successfully to ${status}`,order });
+      .json({ message: `Status updated successfully to ${status}`, order });
   }
 });
-
 
 module.exports = {
   loginAdmin,
@@ -169,6 +183,6 @@ module.exports = {
   updateUserPassword,
   changeUserStatus,
   getAllOrders,
-  getSingleOrder,changeOrderStatus
-
+  getSingleOrder,
+  changeOrderStatus,
 };

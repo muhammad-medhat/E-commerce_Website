@@ -10,8 +10,8 @@ const {
 const { verifyAuth } = require("../middleware/authMiddleware");
 
 router.post("/register", regUser);
-router.get("/:id", verifyAuth, getUser);
-router.put("/user", verifyAuth, updateUser);
+router.get("/", verifyAuth, getUser);
+router.put("/", verifyAuth, updateUser);
 router.get("/logout", verifyAuth, logoutUser);
 router.post("/login", loginUser);
 
