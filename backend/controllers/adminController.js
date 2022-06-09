@@ -40,7 +40,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 // @access  Private
 
 const logoutAdmin = asyncHandler(async (req, res) => {
-  res.cookie("jwt", "", { maxAge: 1 });
+  res.cookie("jwt", "", { maxAge: 1 / 60 });
   res.redirect("/");
 });
 
@@ -91,11 +91,9 @@ const updateUserPassword = asyncHandler(async (req, res) => {
     };
 
     mailService.sendMail(mailInfo);
-    res
-      .status(200)
-      .json({
-        message: "Password updated successfully and the email has been sent!",
-      });
+    res.status(200).json({
+      message: "Password updated successfully and the email has been sent!",
+    });
   }
 });
 
