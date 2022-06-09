@@ -149,28 +149,24 @@ const updateProduct = asyncHandler(async (req, res) => {
 
   const id = req.params.id;
 
-  const product = await Product.findOne({ id });
+  const product = await Product.findByIdAndUpdate(id, {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  });
+
   if (!product) {
     res.status(400);
-    throw new Error("Invalid product");
-  } else {
-    const updated = await Product.findByIdAndUpdate(id, {
-      name,
-      description,
-      images,
-      mainImage,
-      price,
-      category,
-      brand,
-      quantityInStock,
-      daysTillDelivery,
-    });
-    res.status(200).json({
-      message: "Product updated successfully",
-      orig: product,
-      updated,
-    });
+    throw new Error("The product you are trying to update doesn't exist");
   }
+
+  res.status(200).json(product);
 });
 
 /**
