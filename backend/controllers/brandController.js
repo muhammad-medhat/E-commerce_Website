@@ -14,13 +14,6 @@ const createBrand = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please add name");
   }
-  // Check if brand exists
-  const brandExists = await Brand.findOne({ name });
-
-  if (brandExists) {
-    res.status(400);
-    throw new Error("brand already exists");
-  }
 
   const brand = await Brand.create({
     name,
