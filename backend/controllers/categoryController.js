@@ -81,13 +81,13 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 const getCategoryProducts = asyncHandler(async (req, res) => {
   const categoryId = req.params.id;
-  const category = await Category.find({ _id: categoryId });
+  const category = await Category.findById(categoryId);
   if (exists(categoryId)) {
     const products = await Product.find({
-      category: mongoose.Types.ObjectId(categoryId),
+      category: categoryId,
     });
 
-    res.status(200).json({ ...category, products });
+    res.status(200).json({ category: category.name, products });
   }
 });
 
