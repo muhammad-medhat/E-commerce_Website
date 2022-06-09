@@ -41,7 +41,7 @@ const addItemToCart = asyncHandler(async (req, res) => {
 
   let cart = await Cart.findOne({ userId });
   if (!cart) {
-    createCart(userId);
+    cart = await createCart(userId);
   }
 
   if (
@@ -62,7 +62,6 @@ const addItemToCart = asyncHandler(async (req, res) => {
     daysTillDelivery: product.daysTillDelivery,
   });
 
-  cart = await Cart.findOne({ userId });
   // If the cart item already exists in the cart update it
   cart.items = cart.items.filter((item) => !item.productId.equals(productId));
   cart.items.push(cartItem);
