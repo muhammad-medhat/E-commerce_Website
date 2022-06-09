@@ -74,8 +74,6 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
-    stock,
-    handling,
   } = req.body;
 
   //check if product exists
@@ -94,8 +92,6 @@ const createProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
-      stock,
-      handling,
     });
     await newProduct.save();
     User.find({}, function (err, allUsers) {
