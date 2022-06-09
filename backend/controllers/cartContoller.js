@@ -6,7 +6,7 @@ const CartItem = require("../model/cartItemModel");
 
 // Create cart utility function
 const createCart = asyncHandler(async (id) => {
-  await Cart.create({
+  return Cart.create({
     userId: id,
     items: new Array(),
   });
@@ -17,10 +17,11 @@ const createCart = asyncHandler(async (id) => {
 // @access  private
 const getCartItems = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const cart = await Cart.findOne({ userId });
+  let cart = await Cart.findOne({ userId });
   if (!cart) {
-    createCart(userId);
+    cart = await createCart(userId);
   }
+
   res.json(cart.items);
 });
 
