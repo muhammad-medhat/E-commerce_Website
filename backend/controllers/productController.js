@@ -50,22 +50,12 @@ const getProduct = asyncHandler(async (req, res) => {
  * */
 const deleteProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  Product.findByIdAndUpdate(
-    id,
-    { quantityInStock: 0 },
-    { new: true },
-    (err, product) => {
-      if (err) {
-        res.status(400).json({
-          message: "Product not found",
-        });
-      }
-      res.status(200).json({
-        message: "Product deleted",
-        product,
-      });
-    }
-  );
+  const product = await Product.findByIdAndUpdate(id, { quantityInStock: 0 });
+  if (!product) {
+    res.status(400);
+    throw new Error("The product you are trying to delete doesn't exist");
+  }
+  res.json(product);
 });
 
 /**
