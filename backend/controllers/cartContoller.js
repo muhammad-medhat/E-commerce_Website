@@ -30,7 +30,7 @@ const getCartItems = asyncHandler(async (req, res) => {
 const addItemToCart = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
-  // you have to check if the prodct still exists
+  // you have to check if the product still exists
   const product = await Product.findById(productId);
 
   if (!product) {
@@ -80,11 +80,10 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
   if (!cart) {
     res.status(400);
     throw new Error("Can't remove a product from a cart that doesn't exist");
-  } else {
-    cart.items = cart.items.filter((item) => !item.productId.equals(productId));
-    await cart.save();
-    res.json(cart.items);
   }
+  cart.items = cart.items.filter((item) => !item.productId.equals(productId));
+  await cart.save();
+  res.json(cart.items);
 });
 
 module.exports = { addItemToCart, removeItemFromCart, getCartItems };
