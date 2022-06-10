@@ -81,14 +81,17 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 const getCategoryProducts = asyncHandler(async (req, res) => {
   const categoryId = req.params.id;
+  console.log(categoryId);
   const category = await Category.findById(categoryId);
-  if (exists(categoryId)) {
-    const products = await Product.find({
-      category: categoryId,
-    });
-
-    res.status(200).json({ category: category.name, products });
+  console.log(category);
+  if (!category) {
+    res.status(400);
+    throw new Error("Category not found");
   }
+  const products = await Product.find({
+    category: categoryId,
+  });
+  res.status(200).json({ category: category.name, products });
 });
 
 /**

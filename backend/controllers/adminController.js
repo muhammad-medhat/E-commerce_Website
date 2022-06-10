@@ -91,11 +91,9 @@ const updateUserPassword = asyncHandler(async (req, res) => {
     };
 
     mailService.sendMail(mailInfo);
-    res
-      .status(200)
-      .json({
-        message: "Password updated successfully and the email has been sent!",
-      });
+    res.status(200).json({
+      message: "Password updated successfully and the email has been sent!",
+    });
   }
 });
 
