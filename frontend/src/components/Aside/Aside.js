@@ -8,11 +8,11 @@ const Aside = () => {
     return (
         <aside className='d-flex justify-content-center align-items-center'>
             <ul className='aside_links list-unstyled'>
-                <NavLink className="mb-5" to="/account">
+                <NavLink className="mb-5" to="/profile">
                     <AiOutlineUser />
                     <li>My Account</li>
                 </NavLink>
-                <NavLink className="mb-5" to="/profile">
+                <NavLink className="mb-5" to="/orders">
                     <MdOutlineDeliveryDining />
                     <li>My Orders</li>
                 </NavLink>
