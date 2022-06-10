@@ -5,7 +5,8 @@ import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import { Navbar } from './components';
 import Footer from './components/Footer/Footer.js';
 import UserInfo from './pages/Informations/UserInfo'
-import Home from'./pages/home/Home'
+import Orders from './pages/Orders/Orders'
+//import Home from'./pages/home/Home'
 
 const App = () => {
     return (
@@ -13,7 +14,7 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path='/profile' element={<UserInfo />} />
-                <Route path='/Home' element={<Home/>} />
+                <Route path='/orders' element={<Orders />} />
             </Routes>
             <Footer/>
         </BrowserRouter>
