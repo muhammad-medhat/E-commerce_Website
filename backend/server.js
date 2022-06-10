@@ -6,10 +6,17 @@ const { verifyAuth } = require("./middleware/authMiddleware");
 const port = process.env.PORT || 3000;
 const connectDB = require("./config/db");
 const { stripeCheckout } = require("./controllers/paymentController");
+const cors = require("cors")
 connectDB();
 
 const app = express();
 
+const corsOptions = {
+  origin: 'http://somotherdomain.com',
+  optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
