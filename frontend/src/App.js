@@ -2,11 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
-import { Navbar } from './components';
-import Footer from './components/Footer/Footer.js';
-import UserInfo from './pages/Informations/UserInfo'
-import Orders from './pages/Orders/Orders'
-import Login from './pages/Log-Reg/Login'
+import { Navbar, Footer } from './components';
+import { UserInfo, Login } from './pages';
+
 //import Home from'./pages/home/Home'
 
 const App = () => {
