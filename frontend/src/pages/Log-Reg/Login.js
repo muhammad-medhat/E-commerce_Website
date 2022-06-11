@@ -8,29 +8,29 @@ const headers = {
 	Accept: "application/json",
   };
   
-  const login = (email, password) =>
+  const login = ({...props}) =>
   fetch(`${api}/api/users/login`, {
     method: "POST",
     headers: {
       ...headers,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({...props}),
   })
     .then((res) => res.json())
-    .then((data) => data);
+    .then((data) => data.status);
   
-  const register = ( email, password, username, phone, address, age ) =>
+  const register = ( { ...props } ) =>
   fetch(`${api}/api/users/register`, {
     method: "POST",
     headers: {
       ...headers,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password, username, phone, address, age }),
+    body: JSON.stringify( { ...props } ),
   })
     .then((res) => res.json())
-    .then((data) => data);
+    .then((data) => data.status);
 
 
 const Login = () => {
@@ -63,14 +63,15 @@ const Login = () => {
           address:  userData[4],
           age:      userData[5],
         } : {
-          age: userData[2],
+          email:    userData[0],
           password: userData[1],
         }
       // set login and register post here
       const postLogin = async ()=> {
         console.log(info)
         const res = newUser? await register(info) : await await login(info);
-        console.log(res);
+        
+        res === "success"? window.location.replace("http://localhost:3000/") : console.log("error");
       };
       postLogin();
     };

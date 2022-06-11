@@ -8,7 +8,7 @@ form {
     border: none;
 }
 input {
-    width: 60vh;
+    min-width: 30vh;
     display: block;
     border-radius: 5px;
     border: 0px;
@@ -21,11 +21,17 @@ img {
 }
 
 .log-reg-box {
-    height: 75vh;
+    min-height: 55vh;
     margin: 4px;
     justify-content: center;
 }
+.info-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .log-reg-container {
+    min-width: 40vh;
     border-radius: 15px;
     border: none;
     box-shadow: -4px 4px 30px;
@@ -40,11 +46,6 @@ img {
 
     background-image: url("./plog-reg.jpg");
     background-position: center;
-}
-.info-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 .switching-Button {
     margin-top: 1px;
