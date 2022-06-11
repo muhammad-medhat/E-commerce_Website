@@ -6,6 +6,7 @@ import { Navbar } from './components';
 import Footer from './components/Footer/Footer.js';
 import UserInfo from './pages/Informations/UserInfo'
 import Orders from './pages/Orders/Orders'
+import Login from './pages/Log-Reg/Login'
 //import Home from'./pages/home/Home'
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
             <Navbar />
             <Routes>
                 <Route path='/profile' element={<UserInfo />} />
-                <Route path='/orders' element={<Orders />} />
+                <Route path='/login' element={<Login />} />
             </Routes>
             <Footer/>
         </BrowserRouter>

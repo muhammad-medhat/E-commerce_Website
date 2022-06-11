@@ -3,7 +3,7 @@ const colors = require("colors");
 const dotenv = require("dotenv").config();
 const { errorHandler } = require("./middleware/errorMiddleware");
 const { verifyAuth } = require("./middleware/authMiddleware");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const connectDB = require("./config/db");
 const { stripeCheckout } = require("./controllers/paymentController");
 const cors = require("cors")
@@ -12,7 +12,7 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: 'http://somotherdomain.com',
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
 

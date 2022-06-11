@@ -137,7 +137,8 @@ const regUser = asyncHandler(async (req, res) => {
       age: user.age,
       address: user.address,
       phone: user.phone,
-      token: generateToken(user._id),
+      token: generateToken(user._id),  
+      status: "success",
     });
   } else {
     res.status(400);
@@ -191,6 +192,7 @@ const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       token: generateToken(user._id),
+      status: "success",
     });
   } else {
     res.status(400);
