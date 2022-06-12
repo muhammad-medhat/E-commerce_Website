@@ -28,7 +28,7 @@ const Footer = () => (
             <div className="col-md-2 mb-md-0 mb-2">
                 <h5 className="text-uppercase">Privacy</h5>
                 <ul className="list-unstyled">
-                    <li><a class="text2" role="button" href="PAYMENT">PAYMENT</a></li>
+                    <li><a className="text2" role="button" href="PAYMENT">PAYMENT</a></li>
                 </ul>
             </div>
 
