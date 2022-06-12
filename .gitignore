@@ -2,5 +2,4 @@ node_modules
 .env
 .gitignore
 notes.md
-routs.txt
 admin.txt

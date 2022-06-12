@@ -78,16 +78,20 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
+    daysTillDelivery
   } = req.body;
 
   //check if product exists
   const product = await Product.findOne({ name });
   if (product) {
+    console.log(product);
     res.status(400).json({
       message: "Product already exists",
     });
   } else {
+
     const newProduct = new Product({
+      //...req.body
       name,
       description,
       images,
@@ -96,6 +100,7 @@ const createProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
+      daysTillDelivery
     });
     await newProduct.save();
     User.find({}, function (err, allUsers) {

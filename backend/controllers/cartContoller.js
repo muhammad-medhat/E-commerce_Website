@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Cart = require("../model/cartModel");
 const Product = require("../model/productModel");
 const CartItem = require("../model/cartItemModel");
+const User = require("../model/userModel");
 
 // Create cart utility function
 const createCart = asyncHandler(async (id) => {
@@ -28,11 +29,16 @@ const getCartItems = asyncHandler(async (req, res) => {
 // @desc    Add an item to the cart
 // @route   PUT /api/cart/add
 // @access  private
+//first step is to find the cart
 const addItemToCart = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const { productId, quantity } = req.body;
   // you have to check if the product still exists
-  const product = await Product.findById(productId);
+
+  const product = await Product.findOne({
+    _id: productId,
+    quantityInStock: { $gte: quantity },
+  });
 
   if (!product) {
     res.status(400);
@@ -67,7 +73,13 @@ const addItemToCart = asyncHandler(async (req, res) => {
   cart.items.push(cartItem);
   await cart.save();
 
-  res.json(cart.items);
+  
+  const user = await User.findById(userId);
+
+  res.json({
+    user,
+    items: cart.items
+  });
 });
 
 // @desc    Remove an item from the cart
@@ -86,4 +98,21 @@ const removeItemFromCart = asyncHandler(async (req, res) => {
   res.json(cart.items);
 });
 
-module.exports = { addItemToCart, removeItemFromCart, getCartItems };
+/**
+ * @Desc get user`s cart
+ * @route GET /api/cart/:id/user
+ * @access Private
+ * note: this is a route for the user to see its cart
+ * not sure if it is necessary to have this route
+ */
+const getUserCart = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const cart = await Cart.findOne({ userId });
+  if (!cart) {
+    res.status(400);
+    throw new Error("Cart doesn't exist");
+  }
+  res.json(cart);
+});
+
+module.exports = { addItemToCart, removeItemFromCart, getCartItems,getUserCart };

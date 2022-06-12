@@ -6,8 +6,8 @@ const {
   getOrder,
   getAllOrders,
   archiveOrder,
-  getCats,
-  getBrands,
+  getDeliveryTime,
+  checkoutOrder,
 } = require("../controllers/orderController");
 const { verifyAuth } = require("../middleware/authMiddleware");
 
@@ -48,5 +48,23 @@ router.put("/:id", verifyAuth, updateOrder);
  * @access Private user
  */
 router.delete("/:id", verifyAuth, archiveOrder);
+
+/**
+ * @Desc get delivery time
+ * @route GET api/orders/:id/delivery
+ * @access Private user
+ *  */
+
+router.get("/:id/delivery", verifyAuth, getDeliveryTime);
+
+/**
+ * @Desc checkout order
+ * @route GET api/orders/:id/checkout
+ * @access Private user
+ * @body {  
+ *    shippintAddress, total
+ * }
+ *  */
+router.put("/:id/checkout", verifyAuth, checkoutOrder);
 
 module.exports = router;
