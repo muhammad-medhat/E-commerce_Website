@@ -59,10 +59,10 @@ router.get("/:id/delivery", verifyAuth, getDeliveryTime);
 
 /**
  * @Desc checkout order
- * @route GET api/orders/:id/checkout
+ * @route PUt api/orders/:id/checkout
  * @access Private user
  * @body {  
- *    shippintAddress, total
+ *    shippintAddress
  * }
  *  */
 router.put("/:id/checkout", verifyAuth, checkoutOrder);

@@ -183,7 +183,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     //check it again
     //items are obtained from cart not body
     //function not currently in use 
-    // consider removing
+    //consider removing
     const { total, items } = req.body;
     if (items) {
       const updated = await Order.findByIdAndUpdate(
@@ -209,7 +209,14 @@ const updateOrder = asyncHandler(async (req, res) => {
   }
 });
 
-//checkout order
+/**
+ * @Desc checkout order
+ * @route PUt api/orders/:id/checkout
+ * @access Private user
+ * @body {  
+ *    shippintAddress
+ * }
+ *  */
 const checkoutOrder = asyncHandler(async (req, res) => {
   //shipping address not saved
   const { id } = req.params;
@@ -234,6 +241,11 @@ const checkoutOrder = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+* @Desc get delivery time
+* @route GET api/orders/:id/delivery
+* @access Private user
+*  */
 const getDeliveryTime = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (exists(id)) {
