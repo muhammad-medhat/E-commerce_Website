@@ -73,7 +73,7 @@ const getReviews = asyncHandler(async (req, res) => {
       '$group': {
         '_id': req.params.id,
         'avg': {
-          '$avg': reviewExists[0].stars
+          '$avg':{ $round : [reviewExists[0].stars, 1]}
         }
       }
     }
