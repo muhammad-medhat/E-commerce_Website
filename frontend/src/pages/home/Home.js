@@ -12,7 +12,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   console.log(products);
   useEffect(() => {
-      fetch('http://localhost:3000/api/products/')
+      fetch('http://localhost:3001/api/products/')
       .then(res => res.json())
       .then(data => setProducts(data.products));
   }, [])
