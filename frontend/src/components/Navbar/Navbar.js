@@ -28,15 +28,8 @@ const Navbar = ({searchUpdate}) => {
                         </li>
                     </ul>
                 <div className="d-flex icons">
-<<<<<<< HEAD
-                    <Link to="/search">
-                        <AiOutlineSearch />
-                    </Link>
-                    <Link to="/cart">
-=======
                         <SearchBar searchUpdate={searchUpdate} />
                     <Link to="/shoppingcart">
->>>>>>> 6492a87b547d07b9c8dcbc8f011a096f2c93d375
                         <AiOutlineShoppingCart />
                     </Link>
                     <Link to="/profile">
