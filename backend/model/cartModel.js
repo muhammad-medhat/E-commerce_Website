@@ -7,7 +7,11 @@ const cartSchema = mongoose.Schema({
     unique: true,
     ref: "User",
   },
-  items: { type: Array },
+  items: { 
+    type: Array, 
+    ref: "CartItem",
+  },
+
 });
 
 module.exports = mongoose.model("Cart", cartSchema);
