@@ -6,11 +6,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
-const ProductM = require("../model/productMModel");
 
-const Category = require("../model/categoryModel");
-const Brand = require("../model/brandModel");
-const catController = require("../controllers/categoryController");
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
