@@ -1,0 +1,14 @@
+.category__wrapper_head {
+    position: relative;
+    font-family: var(--font-base);
+}
+
+.category__wrapper_head::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 6%;
+    width: 90%;
+    height: 1px;
+    background-color:#D4D2CC;
+}
