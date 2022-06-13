@@ -29,7 +29,7 @@ const Navbar = () => {
                     <Link to="/search">
                         <AiOutlineSearch />
                     </Link>
-                    <Link to="/shoppingcart">
+                    <Link to="/cart">
                         <AiOutlineShoppingCart />
                     </Link>
                     <Link to="/profile">
