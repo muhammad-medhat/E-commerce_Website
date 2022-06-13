@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const Order = require("../model/orderModel");
 const { getUser } = require("./userController");
 const User = require("../model/userModel");
+const Cart = require("../model/cartModel");
+const Product = require("../model/productModel");
 
 /**
  * @Desc get all Orders
@@ -31,7 +33,8 @@ const getAllOrders = asyncHandler(async (req, res) => {
 });
 
 /**
- * @Desc Gets a single Order by id for the current logged in user
+ * @Desc Gets a single Order by its id
+ * for the current loggedin user
  * @route GET api/orders/:id
  * @access Private user
  */
@@ -89,14 +92,68 @@ const archiveOrder = asyncHandler(async (req, res) => {
  * @access Private user
  */
 const createOrder = asyncHandler(async (req, res) => {
+  console.log("Create order");
+
   const user = await User.findById(req.user.id);
   if (!user) {
     res.status(400);
     throw new Error("User not found");
   }
 
+  // check if user has pending orders
+  const pendingOrders = await Order.findOne({
+    user: req.user.id,
+    status: "pending",
+  });
+  if (pendingOrders) {
+    //update order to add items from cart
+    const cart = await Cart.findOne({ user: req.user.id }); // find user cart
+    const products = await Product.find({ _id: { $in: cart.items } }); // find products in cart
+    console.log("products", products);
+    // update order to add items in cart
+    const order = await Order.findOneAndUpdate(
+      { user: req.user.id, status: "pending" },
+      {
+        $push: {
+          items: {
+            $each: products,
+          },
+        },
+      }
+    );
+    res.status(200).json({
+      code: res.statusCode,
+      message: "Order Updated",
+      // user,
+      // cart,
+      // order,
+    });
+  }
+  const cart = await Cart.findOne({ user: req.user.id }); // find user cart
   const order = await Order.create({
     userId: req.user.id,
+    orderDetails: cart,
+  });
+  res.json({
+    code: res.statusCode,
+    message: "New Order created",
+    // user,
+    // cart,
+    // order,
+  });
+});
+const createOrderItem = asyncHandler(async (req, res) => {
+  //delete this function
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    res.status(400);
+
+    throw new Error("User not found");
+  }
+  const cart = await Cart.findOne({ user: req.user.id }); // find user cart
+  const order = await Order.create({
+    userId: req.user.id,
+    orderDetails: cart.items,
   });
   res.json({
     code: res.statusCode,
@@ -121,9 +178,14 @@ const updateOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   if (exists(id)) {
+    const order = await Order.findById(id);
     //get items from cart
+    //check it again
+    //items are obtained from cart not body
+    //function not currently in use 
+    //consider removing
     const { total, items } = req.body;
-    if (items.length > 0) {
+    if (items) {
       const updated = await Order.findByIdAndUpdate(
         id,
         { total, orderDetails: items },
@@ -133,6 +195,12 @@ const updateOrder = asyncHandler(async (req, res) => {
         message: "Order updated successfully",
         order: updated,
       });
+    } else {
+      res.status(400).json({
+        code: res.statusCode,
+        message: "Please add items to your cart",
+        order,
+      });
     }
   } else {
     // if id is not valid
@@ -141,18 +209,29 @@ const updateOrder = asyncHandler(async (req, res) => {
   }
 });
 
-//checkout order
+/**
+ * @Desc checkout order
+ * @route PUt api/orders/:id/checkout
+ * @access Private user
+ * @body {  
+ *    shippintAddress
+ * }
+ *  */
 const checkoutOrder = asyncHandler(async (req, res) => {
+  //shipping address not saved
   const { id } = req.params;
-  const { total, address } = req.body;
+  const { shippingAddress } = req.body;
   if (exists(id)) {
+    //try to calculate the total
+
+    const t = await getTotal(id)
     const order = await Order.findByIdAndUpdate(
       id,
-      { total, shippingAddress, status: "in review" },
+      { total: t, shippingAddress, status: "in review" },
       { new: true }
     );
     res.status(200).json({
-      message: "Order updated successfully",
+      message: "Order in review",
       order: order,
     });
   } else {
@@ -162,8 +241,52 @@ const checkoutOrder = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+* @Desc get delivery time
+* @route GET api/orders/:id/delivery
+* @access Private user
+*  */
+const getDeliveryTime = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (exists(id)) {
+    const order = await Order.findById(id);
+    //find max delivery daysTillDelivery
+    maxDeliveryDays = order.orderDetails[0].items.reduce((acc, item) => {
+      return Math.max(acc, item.daysTillDelivery);
+    }, 0);
+    minDeliveryDays = order.orderDetails[0].items.reduce((acc, item) => {
+      return Math.min(acc, item.daysTillDelivery);
+    }, 1);
+
+
+
+    res.status(200).json({
+      //order: order,
+      min: minDeliveryDays,
+      max: maxDeliveryDays,
+    });
+  } else {
+    // if id is not valid
+    res.status(400);
+    throw new Error("Invalid order");
+  }
+
+});
+/************ private functions ************/
 function exists(id) {
   return mongoose.Types.ObjectId.isValid(id);
+}
+async function  getTotal(id) {
+  //not sure if this is the correct way to do this
+  //checkit again
+  const order = await Order.findById(id);
+  console.log("order", order.orderDetails[0].items);
+  
+  const totalPrice = order.orderDetails[0].items.reduce((acc, item) => {
+    return acc + item.totalPrice;
+  }, 0);
+  // console.log("totalPrice", totalPrice);
+  return totalPrice;
 }
 
 module.exports = {
@@ -172,4 +295,7 @@ module.exports = {
   updateOrder,
   createOrder,
   archiveOrder,
+  getDeliveryTime,
+  createOrderItem,
+  checkoutOrder,
 };
