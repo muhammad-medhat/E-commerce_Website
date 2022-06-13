@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {AiOutlineShoppingCart} from 'react-icons/ai'
 import {FaUser} from 'react-icons/fa';
 
@@ -7,6 +7,13 @@ import SearchBar from '../SearchBar/SearchBar';
 
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
+    const [userState, setUserState] = useState(false);
+
+    const userIconStateHandle = () => {
+        let state = localStorage.getItem("state");
+        setUserState(state);
+    }
+
     return (
         <>
         <nav className="navbar navbar-expand-lg navbar-light sticky-top">
@@ -28,11 +35,11 @@ const Navbar = ({searchUpdate}) => {
                         </li>
                     </ul>
                 <div className="d-flex icons">
-                        <SearchBar searchUpdate={searchUpdate} />
+                    <SearchBar searchUpdate={searchUpdate} />
                     <Link to="/shoppingcart">
                         <AiOutlineShoppingCart />
                     </Link>
-                    <Link to="/profile">
+                    <Link to={userState? "/login" : "/profile"} onClick={userIconStateHandle} >
                         <FaUser />
                     </Link>
                 </div>

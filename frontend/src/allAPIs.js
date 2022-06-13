@@ -30,7 +30,7 @@ fetch(`${api}/api/users/login`, {
   body: JSON.stringify({...props}),
 })
   .then((res) => res.json())
-  .then((data) => data.status);
+  .then((data) => data);
 
    /*SEARCH GETALL */
 export const getAllProducts = () =>

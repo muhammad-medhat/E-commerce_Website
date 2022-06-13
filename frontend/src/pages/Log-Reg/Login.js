@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import * as allAPIs from "./../../allAPIs";
 import "./login.css";
@@ -13,6 +14,13 @@ const Login = () => {
         setNewUser(!newUser);
         if(!newUser) {setButton("Create Account")}
         else {setButton("Sign In")}
+    };
+
+    const logInFunc = (logInRes)=> {
+      
+      localStorage.setItem("token", logInRes.token);
+      localStorage.setItem("state", true);
+      window.location.replace("http://localhost:3000/profile");
     }
 
     const onChangeHandle = (event) => {
@@ -42,9 +50,9 @@ const Login = () => {
       // set login and register post here
       const postLogin = async ()=> {
         const res = newUser? await allAPIs.register(info) : await await allAPIs.login(info);
-        
-        res === 201 ?  window.location.replace("http://localhost:3000/login")
-        : res === 200? window.location.replace("http://localhost:3000/profile") : setErrorMessage(true)
+        console.log(res)
+        res.status === 201 ?  window.location.replace("http://localhost:3000/login")
+        : res.status === 200? logInFunc(res) : setErrorMessage(true)
       };
       postLogin();
     };

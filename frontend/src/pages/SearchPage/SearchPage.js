@@ -1,4 +1,5 @@
 
+
 import CreateCard from "./../../components/CreateCard/CreateCard";
 import "./SearchPage.css"
 
