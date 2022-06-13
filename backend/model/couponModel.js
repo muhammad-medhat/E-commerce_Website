@@ -5,6 +5,10 @@ const couponSchema = mongoose.Schema({
   description: { type: String },
   expiresAt: { type: Date },
   discount: { type: Number },
+  usersUsed: {
+    type: Object,
+    default: {},
+  },
 });
 
 module.exports = mongoose.model("Coupon", couponSchema);

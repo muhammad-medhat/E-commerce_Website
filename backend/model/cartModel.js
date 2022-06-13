@@ -7,7 +7,6 @@ const cartSchema = mongoose.Schema({
     unique: true,
     ref: "User",
   },
-  session: { type: String, require: true, unique: true },
   items: { type: Array },
 });
 

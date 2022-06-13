@@ -1,11 +1,20 @@
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
+const ProductM = require("../model/productMModel");
 
 const Category = require("../model/categoryModel");
 const Brand = require("../model/brandModel");
+const catController = require("../controllers/categoryController");
+const User = require("../model/userModel");
+const MailService = require("../utilities/mailServices");
+const mailService = new MailService();
+
 
 /**
  * @desc    GET all Products
@@ -14,7 +23,11 @@ const Brand = require("../model/brandModel");
  */
 
 const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  const products = await Product.aggregate([
+    {
+      $match: { quantityInStock: { $gt: 0 } },
+    },
+  ]);
   res.status(200).json({
     products,
   });
@@ -37,50 +50,85 @@ const getProduct = asyncHandler(async (req, res) => {
 });
 
 /**
- * functions to be used by Admin
- */
-/**
- * @desc    Delete product
+ * @desc    Delete product (set stock to 0)
  * @route   DELETE /api/products/:id
- * @access  Private
- */
+ * @access  Private Admin
+ * */
 const deleteProduct = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  Product.findByIdAndRemove(id, (err, del) => {
-    if (err) {
-      res.json({
-        message: err,
-      });
-    } else {
-      res.json({
-        message: "successful Delete",
-        del,
-      });
-    }
-  });
+  const { id } = req.params;
+  const product = await Product.findByIdAndUpdate(id, { quantityInStock: 0 });
+  if (!product) {
+    res.status(400);
+    throw new Error("The product you are trying to delete doesn't exist");
+  }
+  res.json(product);
 });
 
 /**
  * @desc    Create product
- * @route   POST /api/products/:id
- * @access  Private
+ * @route   POST /api/products/
+ * @access  Private Admin
  */
 const createProduct = asyncHandler(async (req, res) => {
-  let product = req.body;
+  // const product = req.body;
+  const {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+  } = req.body;
 
-  product = await Product.create({
-    name: product.name,
-    description: product.description,
-    image: product.image,
-    price: product.price,
-    category: product.category,
-    brand: product.brand,
-  });
-  res.json({
-    code: res.statusCode,
-    message: "Product created",
-    product,
-  });
+  //check if product exists
+  const product = await Product.findOne({ name });
+  if (product) {
+    res.status(400).json({
+      message: "Product already exists",
+    });
+  } else {
+    const newProduct = new Product({
+      name,
+      description,
+      images,
+      mainImage,
+      price,
+      category,
+      brand,
+      quantityInStock,
+    });
+    await newProduct.save();
+    User.find({}, function (err, allUsers) {
+      if (err) {
+        console.log(err);
+      }
+      let mailList = [];
+      allUsers.forEach(function (users) {
+        mailList.push(users.email);
+        return mailList;
+      });
+      const productMailed = {
+        name: newProduct.name,
+        description: newProduct.description,
+        image: newProduct.mainImage,
+        price: newProduct.price,
+      };
+
+      let mailInfo = {
+        to: mailList,
+        subject: " Our latest arrivals",
+        template: "productArrivals",
+        context: productMailed,
+      };
+      mailService.sendMail(mailInfo);
+    });
+    res.status(201).json({
+      message: "Product created and an email has been sent to all users",
+      newProduct,
+    });
+  }
 });
 
 /**
@@ -89,40 +137,38 @@ const createProduct = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, description, image, price, category, brand, quantity } =
-    req.body;
+  const {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  } = req.body;
 
   const id = req.params.id;
 
-  const product = await Product.findOne({ id });
+  const product = await Product.findByIdAndUpdate(id, {
+    name,
+    description,
+    images,
+    mainImage,
+    price,
+    category,
+    brand,
+    quantityInStock,
+    daysTillDelivery,
+  });
+
   if (!product) {
     res.status(400);
-    throw new Error("Invalid product");
-  } else {
-    const updated = await Product.findByIdAndUpdate(id, {
-      name: name,
-      description: description,
-      image: image,
-      price: price,
-      category: category,
-      brand: brand,
-      quantity: quantity,
-    });
-    res.status(200).json({
-      message: "Product updated successfully",
-      orig: product,
-      updated,
-    });
+    throw new Error("The product you are trying to update doesn't exist");
   }
-});
 
-const getCats = asyncHandler(async (req, res) => {
-  const categories = await Category.find();
-  res.status(200).json({ categories });
-});
-const getBrands = asyncHandler(async (req, res) => {
-  const brands = await Brand.find();
-  res.status(200).json({ brands });
+  res.status(200).json(product);
 });
 
 module.exports = {
@@ -131,6 +177,4 @@ module.exports = {
   updateProduct,
   createProduct,
   deleteProduct,
-  getCats,
-  getBrands,
 };

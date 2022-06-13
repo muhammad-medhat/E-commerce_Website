@@ -1,0 +1,39 @@
+@import url('http://fonts.cdnfonts.com/css/bickham-script-pro');
+@import url('https://fonts.googleapis.com/css2?family=Italiana&display=swap');
+
+.footer{
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #FDF9F3;
+    font-family:  'Italiana';
+    position: absolute;
+    margin:0%;
+    width: 100%;
+  }
+  .text{
+  font-size:300%;
+  font-family: 'Bickham Script Pro';
+
+}
+.text2{
+  color: #000;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-block;
+
+}.text2:hover{
+  color: #000;
+}
+.icons a {
+    color: #000;
+    font-size: 15px;
+}
+.space{
+  color: var(--main-color);
+}
+hr {
+  left: 10%;
+  right: 10%;
+  bottom: 22%;
+  border: 1px solid #D5D2CC;
+}

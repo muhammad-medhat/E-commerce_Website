@@ -1,0 +1,161 @@
+Orders
+ * @Desc get all Orders for the logged in user
+ * @route GET api/orders/
+
+ * @Desc Select single Order
+ * @route GET api/orders/:id
+
+ * @Desc Create Order
+ * @route POST api/orders/
+
+ * @Desc Update Order
+ * @route PUT api/orders/:id
+
+ * @Desc Cancel Order
+ * @route DELETE api/orders/:id
+ ==========================================================================
+
+ Users
+  * request.body = {  password, email}
+
+ @route POST api/users/login
+
+ @route GET api/users/logout
+
+  * request.body = { username, password, email, age, address, phone }
+ @route POST api/users/register
+
+ // @desc    GET a user
+ @route GET api/users/:id
+
+    // @desc    user can update its account data
+    // @route   PUT /api/users/user
+    // @access  Private
+ * request.body = { username, newPassword, password, email, age, address, phone }
+ @route PUT api/users/user
+ ==========================================================================
+ Products 
+ 
+
+/**
+ * @desc testing get categories, brands
+ *   @route GET api/products/cats
+ *   @route GET api/products/brands
+ *   @access  Public
+ */
+
+ * @Desc get all Products
+ * @route GET api/products/
+ * @access  Public
+ */
+
+/**
+ * @Desc Select single Product
+ * @route GET api/products/:id
+ * @access  Public
+ */
+
+/**
+ * The folowing Routes are specific to the admin
+ */
+
+/**
+ * @Desc Create Product
+ * @route POST api/products /
+ bodu={ name, description, images, price, category, brand, quantityInStock }
+ * * @access  Private
+
+/**
+ * @Desc Update Product
+ * @route PUT api/products/:id
+ * @access  Private
+ * request.body =  { name, description, image, price, category, brand, quantityInStock }
+ */
+
+/**
+ * @Desc Delete Product
+ * @route DELETE api/products/:id
+ * @access  Private
+
+ */
+
+
+ ==========================================================================
+ brands
+
+/**
+ * @desc    Create Brand
+ * @route   POST /api/brand/
+ * @access  Private
+ * body = {name}
+ */
+
+
+/**
+ *  @desc    get all Brand
+ *  @route   GET /api/brand/
+ *  @access  Public
+ * */
+
+
+ * @desc    Delete Brand
+ * @route   DELETE /api/brand/:id
+ * @access  Private
+ * */
+
+
+/**
+ * @desc    update Brand
+ * @route   PUT /api/brand/:id
+ * @access  Private
+ * */
+
+/**
+ *  @desc    Get a Single Brand
+ *  @route   GET /api/brand/:id
+ *  @access  Public
+ * */
+
+
+
+/**
+ *  @desc    Get Brand products
+ *  @route   GET /api/brand/:id/products
+ *  @access  Public
+ * */
+
+
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ ==========================================================================
+ 
+ Admin routes
+
+
+/**
+ * @desc Get all orders
+ * @route GET /api/admin/orders
+ * @access Private
+ */
+
+/**
+ * @desc Get single order
+ * @route GET /api/admin/orders/:id
+ * @access Private
+ */
+ router.get("/orders/:id", verifyAdmin, getSingleOrder);
+
+ /**
+ * @desc Change order status
+ * @route PUT /api/admin/orders/:id/status
+ * req.body = { status }
+
+ * @access Private
+ */

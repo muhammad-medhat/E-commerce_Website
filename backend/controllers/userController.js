@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const User = require("../model/userModel");
 
+
 // @desc    user can update its account data
 // @route   PUT /api/users/user
 // @access  Private
@@ -15,28 +16,38 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  let { username, newPassword, password, email } = req.body;
+  let { username, newPassword, password, email, age, address, phone } =
+    req.body;
 
-  if (!username && !newPassword && !password && !email) {
+  if (
+    !username &&
+    !newPassword &&
+    !password &&
+    !email &&
+    !age &&
+    !address &&
+    !phone
+  ) {
     res.status(400);
     throw new Error("No fields to update");
   }
 
-  if (username) {
-    let updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { username },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
-  } else if (email) {
+  if (email) {
     if (await bcrypt.compare(password, user.password)) {
       let updatedUser = await User.findByIdAndUpdate(
         req.user.id,
         { email },
         { new: true }
       );
-      res.status(200).json(updatedUser);
+
+      res.status(200).json({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        age: updatedUser.age,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        status: updatedUser.status,
+      });
     } else {
       res.status(400);
       throw new Error("Wrong password");
@@ -53,24 +64,47 @@ const updateUser = asyncHandler(async (req, res) => {
         },
         { new: true }
       );
-      res.status(200).json(updatedUser);
+
+      res.status(200).json({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        age: updatedUser.age,
+        address: updatedUser.address,
+        phone: updatedUser.phone,
+        status: updatedUser.status,
+      });
     } else {
       res.status(400);
       throw new Error("Wrong Password");
     }
+  } else {
+    let updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { username, age, address, phone },
+      { new: true }
+    );
+
+    res.status(200).json({
+      username: updatedUser.username,
+      email: updatedUser.email,
+      age: updatedUser.age,
+      address: updatedUser.address,
+      phone: updatedUser.phone,
+    });
   }
 });
+
 
 // @desc    Register User
 // @route   POST /api/users/register
 // @access  Public
 
 const regUser = asyncHandler(async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, age, address, phone } = req.body;
 
   if (!username || !password || !email) {
     res.status(400);
-    throw new Error("Please add all fields");
+    throw new Error("Please add all required fields");
   }
   // Check if user exists
   const userExists = await User.findOne({ email });
@@ -87,6 +121,9 @@ const regUser = asyncHandler(async (req, res) => {
     username,
     password: hashedPassword,
     email,
+    age,
+    address,
+    phone,
   });
 
   if (user) {
@@ -99,7 +136,11 @@ const regUser = asyncHandler(async (req, res) => {
       _id: user.id,
       username: user.username,
       email: user.email,
-      token: generateToken(user._id),
+      age: user.age,
+      address: user.address,
+      phone: user.phone,
+      token: generateToken(user._id),  
+      status: 201,
     });
   } else {
     res.status(400);
@@ -108,17 +149,20 @@ const regUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET a user
-// @route   GET /api/users/user
+// @route   GET /api/users/:id
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { _id, username, email } = await User.findById(req.params.id);
+  const { username, email, phone, address, age } = req.user;
   res.status(200).json({
-    id: _id,
     username,
     email,
+    phone,
+    address,
+    age,
   });
 });
+
 
 // @desc    login a user
 // @route   POST /api/users/login
@@ -129,25 +173,36 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // Check for user email
   const user = await User.findOne({ email });
-  // res.json({up:user.password, p: password, res: (await bcrypt.compare(password, user.password))})
+
   if (user && (await bcrypt.compare(password, user.password))) {
+    // check the user status
+    if (user.status === "DEACTIVATED") {
+      res.status(400);
+      throw new Error("User is Deactivated");
+    } else if (user.status === "SUSPENDED") {
+      res.status(400);
+      throw new Error("User is suspended");
+    }
+
     const token = generateToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000,
     });
-    res.json({
+
+    res.status(200).json({
       _id: user.id,
       name: user.name,
       email: user.email,
       token: generateToken(user._id),
+      status: 200,
     });
   } else {
     res.status(400);
     throw new Error("Invalid credentials");
   }
-  
 });
+
 
 // @desc    logout a user
 // @route   GET /api/users/logout
@@ -175,7 +230,5 @@ const getUserId = (req) => {
     return id;
   }
 };
-
-
 
 module.exports = { updateUser, regUser, getUser, logoutUser, loginUser };

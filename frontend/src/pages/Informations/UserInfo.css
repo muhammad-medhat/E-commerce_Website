@@ -1,0 +1,31 @@
+
+.UserInfo_wrapper {
+    display: flex;
+
+}
+
+.UserInfo_wrapper-content {
+    background-color: var(--section-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-base);
+}
+.mb-5{
+    font-family:  'Italiana';
+
+}
+.btn{
+    background: #E7DCCA;
+    border-radius: 81.5px;
+    border: #d6c2a2;
+    color: #000;
+
+}
+.btn:hover{
+    background: #d6c2a2;
+    color: #000;
+}
+.form-control{
+    background: #F0F4F8;
+}

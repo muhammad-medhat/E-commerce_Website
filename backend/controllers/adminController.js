@@ -4,6 +4,9 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Admin = require("../model/adminModel");
 const User = require("../model/userModel");
+const Order = require("../model/orderModel");
+const MailService = require("../utilities/mailServices");
+const mailService = new MailService();
 
 // @desc    Admin log in
 // @route   POST /api/admin/login
@@ -31,6 +34,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
     throw new Error("Invalid admin email or password");
   }
 });
+
 // @desc    Admin log out
 // @route   GET /api/admin/logout
 // @access  Private
@@ -48,21 +52,23 @@ const generateToken = (id) => {
   });
 };
 // @desc    GET all Users
-// @route   Get /api/admin/users/all
+// @route   Get /api/admin/users/
 // @access  Private
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
   res.status(200).json({ users });
 });
-
-// @desc    new user password
-// @route   PUT /api/admin/users/password
-// @access  Private
+/**
+ * @desc    new user password
+ * @route   PUT /api/admin/users/password
+ * @access  Private
+ */
 
 const updateUserPassword = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
   if (!user) {
     res.status(400);
     throw new Error("Invalid user email");
@@ -71,24 +77,100 @@ const updateUserPassword = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
-    res.status(200).json({ message: "Password updated successfully" });
+
+    const userPassword = {
+      name: user.username,
+      password: password,
+    };
+
+    const mailInfo = {
+      to: req.body.email,
+      subject: " your new password",
+      template: "passwordUpdate",
+      context: userPassword,
+    };
+
+    mailService.sendMail(mailInfo);
+    res.status(200).json({
+      message: "Password updated successfully and the email has been sent!",
+    });
   }
 });
 
-// @description Update User State
-// @route POST /api/admin/users/status
-// @access Private
+/**
+ * @description Update User State
+ * @route POST /api/admin/users/:id/status
+ * @access Private
+ */
+
 const changeUserStatus = asyncHandler(async (req, res) => {
   const { email, status } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     res.status(400);
     throw new Error("Invalid user email");
+  }
+  await User.findByIdAndUpdate(user.id, { status });
+  res.status(200).json({ message: `Status updated successfully to ${status}` });
+});
+
+/**
+ * @desc Get all orders
+ * @route GET /api/admin/orders
+ * @access Private
+ */
+const getAllOrders = asyncHandler(async (req, res) => {
+  if (!req.admin) {
+    res.status(400).json({
+      code: res.statusCode,
+      message: "Please login to see your orders",
+    });
   } else {
-    await User.findByIdAndUpdate(user.id, { status });
+    const orders = await Order.find({});
+    res.status(200).json({
+      num: orders.length,
+      orders,
+    });
+  }
+});
+
+/**
+ * @desc Get single order
+ * @route GET /api/admin/orders/:id
+ * @access Private
+ */
+const getSingleOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  if (!req.admin) {
+    res.status(400).json({
+      code: res.statusCode,
+      message: "Please login to see your orders",
+    });
+  } else {
+    const orders = await Order.find({ _id: id });
+    res.status(200).json({
+      orders,
+    });
+  }
+});
+/**
+ * @description Update Order State
+ * @route POST /api/admin/orders/:id/status
+ * @access Private
+ */
+
+const changeOrderStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+  const order = await Order.findOne({ id });
+  if (!order) {
+    res.status(400);
+    throw new Error("Invalid order");
+  } else {
+    await Order.findByIdAndUpdate(id, { status });
     res
       .status(200)
-      .json({ message: `Status updated successfully to ${status}` });
+      .json({ message: `Status updated successfully to ${status}`, order });
   }
 });
 
@@ -98,4 +180,7 @@ module.exports = {
   getAllUsers,
   updateUserPassword,
   changeUserStatus,
+  getAllOrders,
+  getSingleOrder,
+  changeOrderStatus,
 };

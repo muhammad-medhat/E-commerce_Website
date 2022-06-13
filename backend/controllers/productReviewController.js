@@ -52,47 +52,45 @@ const createReview = asyncHandler(async (req, res) => {
 // @route   Get /api/product/:id
 // @access  Public
 
-const getReviews = asyncHandler(async (req, res) => {
-    const productId = req.params.id;
-    // Check if product exists
-    const productExists = await Product.findById(productId);
-    if (!productExists) {
-      res.status(400);
-      throw new Error("Product doesn't exists");
-    }
+// get the reviews of a product and aggregate the stars to get the average and count the reviews to get the number of reviews
 
-     // Check if product review exists
-     const reviewExists = await ProductReview.find({ productId: productId});
-     if (!reviewExists) {
-       res.status(400);
-       throw new Error(" This product doesn't have any views yet");
-     }
-     const count = await ProductReview.find({ productId: productId}).count();
-  ProductReview.aggregate([
+const getReviews = asyncHandler(async (req, res) => {
+  const productId = req.params.id;
+  const product = await Product.findById(productId);
+  if (!product) {
+    res.status(400).json({
+      message: "Product doesn't exists",
+    });
+  }
+  // show the avg reviews and the count of reviews
+  const reviews = await ProductReview.aggregate([
     {
-      '$group': {
-        '_id': req.params.id,
-        'avg': {
-          '$avg': reviewExists[0].stars
-        }
-      }
-    }
-  ], function (err, data){
-    let avg =  data[0].avg;
-    let counter =  data[0].counter;
-    let reviews = reviewExists[0];
-    if (reviewExists) {
-        res.status(201).json({
-           reviews, 
-            avg, 
-            count
-        });
-      } else {
-        res.status(400);
-        throw new Error("no reviews to be shown");
-      }
-  })
-  
-  });
+      $match: {
+        productId: mongoose.Types.ObjectId(productId),
+      },
+    },
+    {
+      $group: {
+        _id: "$productId",
+        averageStars: { $avg: "$stars" },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  //show All the comment and the stars of the review of the product
+  const reviewsList = await ProductReview.find({ productId: productId });
+  if (reviews) {
+    res.status(200).json({
+      reviews,
+      reviewsList,
+    });
+  } else {
+    res.status(400);
+    throw new Error("No reviews found");
+  }
+}
+
+);
+
 
 module.exports = { createReview , getReviews }

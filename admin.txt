@@ -1,0 +1,4 @@
+adnin credentials
+email:  aecommerce716@gmail.com
+password:  ecommerce12345678
+app password: vzpcjbdxuginqtrz
