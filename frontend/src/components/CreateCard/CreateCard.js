@@ -6,7 +6,7 @@ const CreateCard = ({Product})=> {
   const addToCart = (event) => { }; /* ADD TO CART */
   
   return (
-    <li>
+    <li >
       <div className="Product">
         <div className="Product-top">
           <div className="Product-cover"
@@ -17,7 +17,7 @@ const CreateCard = ({Product})=> {
             }}
           ></div>
 
-          <div className="Product-AddTo-Cart" onClick={addToCart} > 
+          <div className="Product-AddTo-Cart add" onClick={addToCart} > 
             {/* Put ADD to CART ICON Here */}
           </div>
         </div>

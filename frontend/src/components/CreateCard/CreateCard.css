@@ -25,10 +25,10 @@
   background-size: 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
-.Product-AddTo-Cart add {
+.add {
   background-image: url("./add.svg");
 }
-.Product-AddTo-Cart remove {
+.remove {
   background-image: url("./remove.svg");
 }
 .Product-name {
