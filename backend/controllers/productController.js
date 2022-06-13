@@ -14,6 +14,8 @@ const catController = require("../controllers/categoryController");
 const User = require("../model/userModel");
 const MailService = require("../utilities/mailServices");
 const mailService = new MailService();
+
+
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
