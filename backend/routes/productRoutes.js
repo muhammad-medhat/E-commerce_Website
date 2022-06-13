@@ -6,23 +6,8 @@ const {
   getProduct,
   getAllProducts,
   deleteProduct,
-  getCats,
-  getBrands,
-  generateProducts, genCats,
 } = require("../controllers/productController");
 const { verifyAdmin } = require("../middleware/authMiddleware");
-
-/**
- * @desc testing get categories, brands
- *   @route GET api/products/cats
- *   @route GET api/products/brands
- *   @access  Public
-
- */
-router.get("/cats", getCats);
-router.get("/brands", getBrands);
-router.get("/gen", generateProducts);
-router.get("/gencats", genCats);
 
 /**
  * @Desc get all Products
@@ -47,7 +32,7 @@ router.get("/:id", getProduct);
  * @Desc Create Product
  * @route POST api/products /
  * * @access  Private
-*/
+ */
 router.post("/", verifyAdmin, createProduct);
 
 /**

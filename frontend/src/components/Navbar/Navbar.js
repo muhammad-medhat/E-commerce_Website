@@ -1,10 +1,12 @@
 import React from 'react';
-import {AiOutlineSearch, AiOutlineShoppingCart} from 'react-icons/ai'
+import {AiOutlineShoppingCart} from 'react-icons/ai'
 import {FaUser} from 'react-icons/fa';
+
 import { Link, NavLink } from 'react-router-dom';
+import SearchBar from '../SearchBar/SearchBar';
 
 import './navbar.css';
-const Navbar = () => {
+const Navbar = ({searchUpdate}) => {
     return (
         <>
         <nav className="navbar navbar-expand-lg navbar-light sticky-top">
@@ -26,10 +28,15 @@ const Navbar = () => {
                         </li>
                     </ul>
                 <div className="d-flex icons">
+<<<<<<< HEAD
                     <Link to="/search">
                         <AiOutlineSearch />
                     </Link>
                     <Link to="/cart">
+=======
+                        <SearchBar searchUpdate={searchUpdate} />
+                    <Link to="/shoppingcart">
+>>>>>>> 6492a87b547d07b9c8dcbc8f011a096f2c93d375
                         <AiOutlineShoppingCart />
                     </Link>
                     <Link to="/profile">
