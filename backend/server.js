@@ -6,7 +6,7 @@ const { verifyAuth } = require("./middleware/authMiddleware");
 const port = process.env.PORT || 3001;
 const connectDB = require("./config/db");
 const { stripeCheckout } = require("./controllers/paymentController");
-const cors = require("cors")
+const cors = require("cors");
 connectDB();
 
 const app = express();
