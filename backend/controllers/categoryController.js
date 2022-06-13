@@ -8,19 +8,21 @@ const Product = require("../model/productModel");
 // @access  Private
 
 const createCategory = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  const { image, name } = req.body;
 
-  if (!name) {
+  if (!name || !image) {
     res.status(400);
     throw new Error("Please add all fields");
   }
 
   const category = await Category.create({
+    image,
     name,
   });
 
   if (category) {
     res.status(201).json({
+      image: category.image,
       name: category.name,
     });
   } else {
