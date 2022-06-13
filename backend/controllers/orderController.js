@@ -124,9 +124,6 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(200).json({
       code: res.statusCode,
       message: "Order Updated",
-      // user,
-      // cart,
-      // order,
     });
   }
   const cart = await Cart.findOne({ user: req.user.id }); // find user cart
@@ -137,28 +134,6 @@ const createOrder = asyncHandler(async (req, res) => {
   res.json({
     code: res.statusCode,
     message: "New Order created",
-    // user,
-    // cart,
-    // order,
-  });
-});
-const createOrderItem = asyncHandler(async (req, res) => {
-  //delete this function
-  const user = await User.findById(req.user.id);
-  if (!user) {
-    res.status(400);
-
-    throw new Error("User not found");
-  }
-  const cart = await Cart.findOne({ user: req.user.id }); // find user cart
-  const order = await Order.create({
-    userId: req.user.id,
-    orderDetails: cart.items,
-  });
-  res.json({
-    code: res.statusCode,
-    message: "Order created",
-    order,
   });
 });
 
@@ -170,20 +145,15 @@ const createOrderItem = asyncHandler(async (req, res) => {
 
 const updateOrder = asyncHandler(async (req, res) => {
   /**
-   * get total from req.body
-   * that will be sent from frontend
-   * then update the order in our database
+   * this function will update an order
+   * Admin can update order status
    */
 
   const { id } = req.params;
 
   if (exists(id)) {
     const order = await Order.findById(id);
-    //get items from cart
-    //check it again
-    //items are obtained from cart not body
-    //function not currently in use 
-    //consider removing
+
     const { total, items } = req.body;
     if (items) {
       const updated = await Order.findByIdAndUpdate(
@@ -213,7 +183,7 @@ const updateOrder = asyncHandler(async (req, res) => {
  * @Desc checkout order
  * @route PUt api/orders/:id/checkout
  * @access Private user
- * @body {  
+ * @body {
  *    shippintAddress
  * }
  *  */
@@ -224,10 +194,10 @@ const checkoutOrder = asyncHandler(async (req, res) => {
   if (exists(id)) {
     //try to calculate the total
 
-    const t = await getTotal(id)
+    const total = await getTotal(id);
     const order = await Order.findByIdAndUpdate(
       id,
-      { total: t, shippingAddress, status: "in review" },
+      { total, shippingAddress, status: "in review" },
       { new: true }
     );
     res.status(200).json({
@@ -242,10 +212,10 @@ const checkoutOrder = asyncHandler(async (req, res) => {
 });
 
 /**
-* @Desc get delivery time
-* @route GET api/orders/:id/delivery
-* @access Private user
-*  */
+ * @Desc get delivery time
+ * @route GET api/orders/:id/delivery
+ * @access Private user
+ *  */
 const getDeliveryTime = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (exists(id)) {
@@ -258,8 +228,6 @@ const getDeliveryTime = asyncHandler(async (req, res) => {
       return Math.min(acc, item.daysTillDelivery);
     }, 1);
 
-
-
     res.status(200).json({
       //order: order,
       min: minDeliveryDays,
@@ -270,22 +238,16 @@ const getDeliveryTime = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Invalid order");
   }
-
 });
 /************ private functions ************/
 function exists(id) {
   return mongoose.Types.ObjectId.isValid(id);
 }
-async function  getTotal(id) {
-  //not sure if this is the correct way to do this
-  //checkit again
+async function getTotal(id) {
   const order = await Order.findById(id);
-  console.log("order", order.orderDetails[0].items);
-  
   const totalPrice = order.orderDetails[0].items.reduce((acc, item) => {
     return acc + item.totalPrice;
   }, 0);
-  // console.log("totalPrice", totalPrice);
   return totalPrice;
 }
 
@@ -296,6 +258,5 @@ module.exports = {
   createOrder,
   archiveOrder,
   getDeliveryTime,
-  createOrderItem,
   checkoutOrder,
 };
