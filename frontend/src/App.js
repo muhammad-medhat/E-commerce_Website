@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import {useState} from "react";
 import { Navbar, Footer } from './components';
-import { UserInfo, Login ,Home,Categories, SearchPage } from './pages';
+import { UserInfo, Login ,Home,Categories, SearchPage,Orders } from './pages';
 
 
 const App = () => {
@@ -20,6 +20,7 @@ const App = () => {
                 <Route path='/categories' element={<Categories />} />
                 <Route path='/profile' element={<UserInfo />} />
                 <Route path='/login' element={<Login />} />
+                <Route path='/orders' element={<Orders />} />
                 <Route path='/'  element={<Home/>}/>
                  <Route path='/SearchPage' element={<SearchPage results={searchResults} />} />
 
