@@ -1,9 +1,33 @@
 
-.search-input {
-    position: relative;
-    top: -14px;
-    left: -10px;
+
+.search-products-bar {
+  z-index: 5;
+  display: flex;
 }
+.search-input {
+  flex: 1;
+  position: relative;
+  top: -14px;
+  left: -10px;
+  border: none;
+  outline: none;
+}
+.collapse-button {
+  position: relative;
+  display: block;
+  top: 7px;
+  left: -2px;
+  width: 29px;
+  height: 29px;
+  background: white;
+  background-image: url("./arrow-back.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 28px;
+  font-size: 0;
+  border: .1px solid black;
+}
+
 .search-icon {
     position: relative;
     top: 7px;

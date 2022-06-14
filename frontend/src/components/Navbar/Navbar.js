@@ -7,12 +7,6 @@ import SearchBar from '../SearchBar/SearchBar';
 
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
-    const [userState, setUserState] = useState(false);
-
-    const userIconStateHandle = () => {
-        let state = localStorage.getItem("state");
-        setUserState(state);
-    }
 
     return (
         <>
@@ -39,7 +33,7 @@ const Navbar = ({searchUpdate}) => {
                     <Link to="/shoppingcart">
                         <AiOutlineShoppingCart />
                     </Link>
-                    <Link to={userState? "/login" : "/profile"} onClick={userIconStateHandle} >
+                    <Link to="/login" >
                         <FaUser />
                     </Link>
                 </div>

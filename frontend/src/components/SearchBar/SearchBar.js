@@ -20,8 +20,15 @@ const SearchBar = ({searchUpdate}) => {
   };
 
   const clickHandle = ()=> {
-    if(activeSearch === false) { setActiveSearch(true) }
-    getAllProducts();
+    if(!activeSearch) { 
+      setActiveSearch(true) 
+      getAllProducts();
+    }
+    if(activeSearch) { 
+      setActiveSearch(false) 
+      window.location.replace("http://localhost:3000/products");
+    }
+
   };
 
   const changeHandle = (event) => { setSearchValue(event.target.value); } ;
@@ -38,18 +45,24 @@ const SearchBar = ({searchUpdate}) => {
   return (
     <div>
       {activeSearch? 
-      <form className='search-input' onSubmit={submitHandle} >
-        <input 
-          type="text"
-          placeholder='looking for?'
-          value={searchValue}
-          onChange={changeHandle}
-        />
-      </form>
+        <div className='search-products-bar' onClick={clickHandle} >
+          <div className="collapse-button">
+        </div>
+
+        <form className='search-input' onSubmit={submitHandle} >
+          <input 
+            type="text"
+            placeholder='looking for?'
+            value={searchValue}
+            onChange={changeHandle}
+          />
+        </form>
+      </div>
         : 
       <Link to='./SearchPage' onClick={clickHandle} >
         < AiOutlineSearch/>
-      </Link> 
+      </Link>
+      
       }
     </div>
   )
