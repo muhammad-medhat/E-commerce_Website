@@ -4,7 +4,6 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const User = require("../model/userModel");
 
-
 // @desc    user can update its account data
 // @route   PUT /api/users/user
 // @access  Private
@@ -70,7 +69,6 @@ const updateUser = asyncHandler(async (req, res) => {
   });
 });
 
-
 // @desc    Register User
 // @route   POST /api/users/register
 // @access  Public
@@ -115,7 +113,7 @@ const regUser = asyncHandler(async (req, res) => {
       age: user.age,
       address: user.address,
       phone: user.phone,
-      token: generateToken(user._id),  
+      token: generateToken(user._id),
       status: 201,
     });
   } else {
@@ -125,20 +123,20 @@ const regUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET a user
-// @route   GET /api/users/:id
+// @route   GET /api/users/
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { username, email, phone, address, age } = req.user;
+  const { username, email, phone, address, age, status } = req.user;
   res.status(200).json({
     username,
     email,
     phone,
     address,
     age,
+    status,
   });
 });
-
 
 // @desc    login a user
 // @route   POST /api/users/login
@@ -178,7 +176,6 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid credentials");
   }
 });
-
 
 // @desc    logout a user
 // @route   GET /api/users/logout
