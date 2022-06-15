@@ -23,6 +23,8 @@
     "nodemailer": "^6.7.5",
     "nodemailer-express-handlebars": "^5.0.0",
     "react-bootstrap": "^2.4.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
     "stripe": "^9.8.0"
   },
   "devDependencies": {
