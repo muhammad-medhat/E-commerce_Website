@@ -19,22 +19,16 @@ const SearchBar = ({searchUpdate}) => {
     setProducts(products);
   };
 
-  const clickHandle = ()=> {
+  const clickHandle = (event)=> {
+    //event.preventDefault();
+    if(event.target.name === "collapse") {
+      setActiveSearch(false) 
+      //window.location.replace("http://localhost:3000/products");
+    }
     if(!activeSearch) { 
       setActiveSearch(true) 
       getAllProducts();
     }
-    if(activeSearch) { 
-      setActiveSearch(false) 
-      window.location.replace("http://localhost:3000/products");
-    }
-
-  };
-
-  const changeHandle = (event) => { setSearchValue(event.target.value); } ;
-  
-  const submitHandle = (event) => {
-    event.preventDefault();
 
     let searchResults = products.filter( f => f.name.toLowerCase().includes(searchValue.toLowerCase()) );
     
@@ -42,28 +36,28 @@ const SearchBar = ({searchUpdate}) => {
     setSearchValue("")
   };
 
+  const changeHandle = (event) => { setSearchValue(event.target.value); } ;
+  
   return (
-    <div>
-      {activeSearch? 
-        <div className='search-products-bar' onClick={clickHandle} >
-          <div className="collapse-button">
-        </div>
-
-        <form className='search-input' onSubmit={submitHandle} >
-          <input 
-            type="text"
-            placeholder='looking for?'
-            value={searchValue}
-            onChange={changeHandle}
-          />
-        </form>
-      </div>
-        : 
-      <Link to='./SearchPage' onClick={clickHandle} >
-        < AiOutlineSearch/>
-      </Link>
+    <div className='show-flex' >
+      <Link to='./SearchPage' onClick={clickHandle} className='search-icon'  >
+        < AiOutlineSearch />
+      </Link>  
       
-      }
+      <div className='show-flex'>
+        {activeSearch &&
+        <input 
+          type="text"
+          placeholder='looking for?'
+          value={searchValue}
+          onChange={changeHandle}
+        /> 
+        } 
+          
+        {activeSearch &&
+        <button className="collapse-button" onClick={clickHandle} name="collapse" />
+        }
+      </div>
     </div>
   )
 };
