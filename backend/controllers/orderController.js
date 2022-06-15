@@ -62,8 +62,11 @@ const getOrder = asyncHandler(async (req, res) => {
 const archiveOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (exists(id)) {
-    // const order = await Order.findById(id);
-    // const arc = order.archived;
+    const order = await Order.findById(id);
+    if (order.status !== "pending") {
+      res.status(400);
+      throw new Error(`Order is already ${order.status}`);
+    }
 
     Order.updateOne({ _id: id }, { archived: true }, (err) => {
       if (err) {
