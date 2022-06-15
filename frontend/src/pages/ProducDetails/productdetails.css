@@ -1,0 +1,20 @@
+.details__wrapper {
+    background: var(--main-color);
+}
+
+.info__list {
+    list-style-type:circle;
+}
+
+.info__list li {
+    margin-bottom: 10px;
+    font-size: 18px;
+    width: 400px
+}
+
+button.add {
+    background-color: var(--button-color);
+    border: none;
+    padding: 6px 20px;
+    border-radius: 4px;
+}

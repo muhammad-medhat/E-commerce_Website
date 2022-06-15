@@ -2,13 +2,10 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import {useState} from "react";
-
-
 import { Navbar, Footer } from './components';
-import { UserInfo, Login, Categories, SearchPage } from './pages';
-//import Orders from './pages/Orders/Orders'
 
-//import Home from'./pages/home/Home'
+import { UserInfo, Orders, Login, Categories, Products, ProductDetails, SearchPage, Home } from './pages';
+
 
 const App = () => {
     const [searchResults, setSearchResults] = useState([]);
@@ -21,10 +18,16 @@ const App = () => {
         <BrowserRouter>
             <Navbar searchUpdate={searchUpdateHandle} />
             <Routes>
+                <Route path='/products' element={<Products />} />
+                <Route path='/productDetails' element={<ProductDetails />} />
                 <Route path='/categories' element={<Categories />} />
                 <Route path='/profile' element={<UserInfo />} />
+                <Route path='/orders' element={<Orders />} />
                 <Route path='/login' element={<Login />} />
+                <Route path='/orders' element={<Orders />} />
+                <Route path='/'  element={<Home/>}/>
                 <Route path='/SearchPage' element={<SearchPage results={searchResults} />} />
+
             </Routes>
             <Footer/>
         </BrowserRouter>

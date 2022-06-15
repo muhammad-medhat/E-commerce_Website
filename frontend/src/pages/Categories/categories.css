@@ -4,11 +4,6 @@
     background: var(--main-color);
 }
 
-.category__wrapper_head {
-    position: relative;
-    font-family: var(--font-base);
-}
-
 .category__wrapper-women, 
 .category__wrapper-men {
     position: relative;
@@ -18,7 +13,6 @@
     font-size: 36px;
 }
 
-.category__wrapper_head::after,
 .category__wrapper-women::after, 
 .category__wrapper-men::after {
     content: "";

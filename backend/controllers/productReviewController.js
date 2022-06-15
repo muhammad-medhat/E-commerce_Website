@@ -52,7 +52,7 @@ const createReview = asyncHandler(async (req, res) => {
 // @route   Get /api/product/:id
 // @access  Public
 
-// get the reviews of a product and aggregate the stars to get the average and count the reviews to get the number of reviews
+
 
 const getReviews = asyncHandler(async (req, res) => {
   const productId = req.params.id;
@@ -77,7 +77,7 @@ const getReviews = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  //show All the comment and the stars of the review of the product
+  //show All the comment andiew of thproduct
   const reviewsList = await ProductReview.find({ productId: productId });
   if (reviews) {
     res.status(200).json({
