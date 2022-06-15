@@ -41,6 +41,10 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const getOrder = asyncHandler(async (req, res) => {
   if (exists(req.params.id)) {
     const order = await Order.findById(req.params.id);
+    if (!order) {
+      res.status(400);
+      throw new Error("Order not found");
+    }
     res.status(200).json({
       order,
     });
@@ -62,8 +66,11 @@ const getOrder = asyncHandler(async (req, res) => {
 const archiveOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (exists(id)) {
-    // const order = await Order.findById(id);
-    // const arc = order.archived;
+    const order = await Order.findById(id);
+    if (order.status !== "pending") {
+      res.status(400);
+      throw new Error(`Order is already ${order.status}`);
+    }
 
     Order.updateOne({ _id: id }, { archived: true }, (err) => {
       if (err) {
