@@ -36,4 +36,8 @@ fetch(`${api}/api/users/login`, {
 export const getAllProducts = () =>
 fetch(`${api}/api/products`)
   .then((res) => res.json())
+<<<<<<< HEAD
   .then((data) => data )
+=======
+  .then((data) => data )
+>>>>>>> parent of a03348f (APIs file in the frontend)
