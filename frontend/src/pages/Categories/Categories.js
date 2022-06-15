@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import * as API from '../../allAPIs'
 import './categories.css';
 import catImg from '../../assets/image.png';
 import hatImg from '../../assets/hat.jpg';
@@ -7,15 +6,10 @@ import { SubHeading } from '../../components';
 const Categories = () => {
     const [category, setCategory] = useState([]);
     console.log(category);
-    useEffect(() => {
-        API.getCategories()
-            .then(res => {
-                setCategory(res.categories);
-            })
-    
-        // fetch("http://localhost:3001/api/categories")
-        // .then(res => res.json())
-        // .then(data => setCategory(data.categories));
+    useEffect(() => {    
+        fetch("http://localhost:3001/api/categories")
+        .then(res => res.json())
+        .then(data => setCategory(data.categories));
     }, [])
     return (
         <div className="category__wrapper">
