@@ -6,15 +6,10 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Product = require("../model/productModel");
-const ProductM = require("../model/productMModel");
 
-const Category = require("../model/categoryModel");
-const Brand = require("../model/brandModel");
-const catController = require("../controllers/categoryController");
 const User = require("../model/userModel");
 const MailService = require("../utilities/mailServices");
 const mailService = new MailService();
-
 
 /**
  * @desc    GET all Products
@@ -80,7 +75,7 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
-    daysTillDelivery
+    daysTillDelivery,
   } = req.body;
 
   //check if product exists
@@ -91,7 +86,6 @@ const createProduct = asyncHandler(async (req, res) => {
       message: "Product already exists",
     });
   } else {
-
     const newProduct = new Product({
       //...req.body
       name,
@@ -102,7 +96,7 @@ const createProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
-      daysTillDelivery
+      daysTillDelivery,
     });
     await newProduct.save();
     User.find({}, function (err, allUsers) {
