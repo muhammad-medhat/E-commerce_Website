@@ -14,6 +14,8 @@ const catController = require("../controllers/categoryController");
 const User = require("../model/userModel");
 const MailService = require("../utilities/mailServices");
 const mailService = new MailService();
+
+
 /**
  * @desc    GET all Products
  * @route   GET /api/products/
@@ -78,16 +80,20 @@ const createProduct = asyncHandler(async (req, res) => {
     category,
     brand,
     quantityInStock,
+    daysTillDelivery
   } = req.body;
 
   //check if product exists
   const product = await Product.findOne({ name });
   if (product) {
+    console.log(product);
     res.status(400).json({
       message: "Product already exists",
     });
   } else {
+
     const newProduct = new Product({
+      //...req.body
       name,
       description,
       images,
@@ -96,6 +102,7 @@ const createProduct = asyncHandler(async (req, res) => {
       category,
       brand,
       quantityInStock,
+      daysTillDelivery
     });
     await newProduct.save();
     User.find({}, function (err, allUsers) {

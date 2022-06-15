@@ -1,3 +1,20 @@
+checkout process
+
+1.add to cart
+   put http://127.0.0.1:3000/api/cart/add
+   body{productId, quantity}
+2.place order
+   post http://127.0.0.1:3000/api/orders/
+
+3. update total - might be removed
+   put http://127.0.0.1:3000/api/orders/:id
+   no body
+3.1.checkout (calc total) 
+   PUT api/orders/:id/checkouthttp://127.0.0.1:3000/api/orders/:id/checkout
+   body {  shippintAddress }
+
+   -----------------------------------------------------------------------------------
+
 Orders
  * @Desc get all Orders for the logged in user
  * @route GET api/orders/

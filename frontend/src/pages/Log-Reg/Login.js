@@ -1,57 +1,38 @@
 
+
 import { useState } from "react";
+import * as allAPIs from "./../../allAPIs";
 import "./login.css";
-
-const api = 'http://localhost:3001';
-
-const headers = {
-	Accept: "application/json",
-  };
-  
-  const login = ({...props}) =>
-  fetch(`${api}/api/users/login`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({...props}),
-  })
-    .then((res) => res.json())
-    .then((data) => data.status);
-  
-  const register = ( { ...props } ) =>
-  fetch(`${api}/api/users/register`, {
-    method: "POST",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify( { ...props } ),
-  })
-    .then((res) => res.json())
-    .then((data) => data.status);
-
 
 const Login = () => {
     const [newUser, setNewUser] = useState(false);
     const [Button, setButton] = useState("Sign In");
     const [userData, setUserData] = useState( [] ) ;
+    const [errorMessage, setErrorMessage] = useState(false);
 
     const switchPage = () => {
         setNewUser(!newUser);
         if(!newUser) {setButton("Create Account")}
         else {setButton("Sign In")}
+    };
+
+    const logInFunc = (logInRes)=> {
+      
+      localStorage.setItem("token", logInRes.token);
+      localStorage.setItem("state", true);
+      window.location.replace("http://localhost:3000/profile");
     }
 
     const onChangeHandle = (event) => {
+      if(errorMessage === true) { setErrorMessage(false) }
+      
       const {name, value} = event.target;
       userData[name] = value ;
       
       setUserData(userData);
     }
 
-    const onSubitHandle = (event) => {
+    const onSubmitHandle = (event) => {
         event.preventDefault();
         console.log("userData",userData);
 
@@ -68,10 +49,10 @@ const Login = () => {
         }
       // set login and register post here
       const postLogin = async ()=> {
-        console.log(info)
-        const res = newUser? await register(info) : await await login(info);
-        
-        res === "success"? window.location.replace("http://localhost:3000/") : console.log("error");
+        const res = newUser? await allAPIs.register(info) : await await allAPIs.login(info);
+        console.log(res)
+        res.status === 201 ?  window.location.replace("http://localhost:3000/login")
+        : res.status === 200? logInFunc(res) : setErrorMessage(true)
       };
       postLogin();
     };
@@ -82,7 +63,9 @@ return (
       <h2>{Button}</h2>
       
       <div className="info-box">
-        <form className="info-box" onSubmit={onSubitHandle}>
+        {errorMessage && <h6 className="error-message" >error</h6> }
+
+        <form className="info-box" onSubmit={onSubmitHandle}  >
           <input
           type="email"
           placeholder="email"
