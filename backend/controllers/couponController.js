@@ -2,13 +2,14 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Coupon = require("../model/couponModel");
 const Product = require("../model/productModel");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Create Coupon
 // @route   POST /api/coupons/
 // @access  Private
 
 const createCoupon = asyncHandler(async (req, res) => {
-  const { code, description, expiresAt, discount } = req.body;
+  const { code, description, expiresAt, discount, max_redemptions } = req.body;
 
   if (!code || !description || !expiresAt || !discount) {
     res.status(400);
@@ -23,7 +24,18 @@ const createCoupon = asyncHandler(async (req, res) => {
     throw new Error("coupon already exists");
   }
 
-  const coupon = await Coupon.create({
+  const coupon = await stripe.coupons.create({
+    percent_off: discount,
+    duration: "once",
+    max_redemptions,
+  });
+
+  const promotionCode = await stripe.promotionCodes.create({
+    coupon: coupon.id,
+    code,
+  });
+
+  const createdCoupon = await Coupon.create({
     code,
     description,
     expiresAt,
@@ -31,13 +43,7 @@ const createCoupon = asyncHandler(async (req, res) => {
   });
 
   if (coupon) {
-    res.status(201).json({
-      id: coupon._id,
-      code: coupon.code,
-      description: coupon.description,
-      expiresAt: coupon.expiresAt,
-      discount: coupon.discount,
-    });
+    res.status(201).json(createdCoupon);
   } else {
     res.status(400);
     throw new Error("Invalid coupon data");
