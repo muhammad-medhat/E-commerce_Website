@@ -8,6 +8,11 @@ import SearchBar from '../SearchBar/SearchBar';
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
 
+  
+        const state = localStorage.getItem("state");
+       
+
+
     return (
         <>
         <nav className="navbar navbar-expand-lg navbar-light sticky-top">
@@ -30,10 +35,10 @@ const Navbar = ({searchUpdate}) => {
                     </ul>
                 <div className="d-flex icons">
                     <SearchBar searchUpdate={searchUpdate} />
-                    <Link to="/shoppingcart">
+                    <Link to="/cart">
                         <AiOutlineShoppingCart />
                     </Link>
-                    <Link to="/login" >
+                    <Link to={state?   "/profile" : "/login"}  >
                         <FaUser />
                     </Link>
                 </div>

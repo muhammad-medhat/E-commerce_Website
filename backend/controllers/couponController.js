@@ -11,7 +11,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const createCoupon = asyncHandler(async (req, res) => {
   const { code, description, expiresAt, discount, max_redemptions } = req.body;
 
-  if (!code || !description || !expiresAt || !discount) {
+  if (!code || !description || !expiresAt || !discount || !max_redemptions) {
     res.status(400);
     throw new Error("Please add all fields");
   }
@@ -23,25 +23,22 @@ const createCoupon = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("coupon already exists");
   }
-
   const coupon = await stripe.coupons.create({
+    id: code,
     percent_off: discount,
     duration: "once",
     max_redemptions,
   });
-
-  const promotionCode = await stripe.promotionCodes.create({
+  await stripe.promotionCodes.create({
     coupon: coupon.id,
-    code,
   });
-
+  
   const createdCoupon = await Coupon.create({
     code,
     description,
     expiresAt,
     discount,
   });
-
   if (coupon) {
     res.status(201).json(createdCoupon);
   } else {
@@ -55,12 +52,29 @@ const createCoupon = asyncHandler(async (req, res) => {
 // @access  Private
 
 const viewCoupon = asyncHandler(async (req, res) => {
+  const coupon = await stripe.coupons.list();  
   const coupons = await Coupon.find();
-  res.status(200).json({ coupons });
+  res.status(200).json({ coupons, coupon });
 });
 
-// @desc    get a Coupons
-// @route   GET /api/coupons/:id
+// @desc    delete a Coupons
+// @route   GET /api/coupons/
 // @access  Private
 
-module.exports = { createCoupon, viewCoupon };
+const delCoupon = asyncHandler(async (req, res) => {
+  const coupon = await Coupon.findOne({ code: req.body.code });
+  if (!coupon) {
+    res.status(400);
+    throw new Error("coupon not found");
+  }
+  await Coupon.findByIdAndDelete(coupon._id);
+  const deleted = await stripe.coupons.del(
+    req.body.code  
+  );
+  res.status(201).json({
+    id: coupon._id,
+    deleted,
+  });
+  
+});
+module.exports = { createCoupon, viewCoupon, delCoupon };
