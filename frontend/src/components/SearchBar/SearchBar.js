@@ -20,19 +20,21 @@ const SearchBar = ({searchUpdate}) => {
   };
 
   const clickHandle = (event)=> {
-    //event.preventDefault();
-    if(event.target.name === "collapse") {
-      setActiveSearch(false) 
-      //window.location.replace("http://localhost:3000/products");
-    }
     if(!activeSearch) { 
       setActiveSearch(true) 
       getAllProducts();
     }
-
-    let searchResults = products.filter( f => f.name.toLowerCase().includes(searchValue.toLowerCase()) );
-    
-    searchUpdate(searchResults);
+    else { 
+      if(event.target.name === "collapse") {
+        setActiveSearch(false) 
+        setSearchValue("")
+        searchUpdate([]);
+      }
+      else {
+        let searchResults = products.filter( f => f.name.toLowerCase().includes(searchValue.toLowerCase()) );
+        searchValue? searchUpdate(searchResults) : searchUpdate([]);
+      }
+    }
     setSearchValue("")
   };
 
