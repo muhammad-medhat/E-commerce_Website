@@ -11,9 +11,11 @@ import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 
+
 import './aside.css'
 
 const Accordion = styled((props) => (
+
     <MuiAccordion disableGutters elevation={0} square {...props} />
   ))(({ theme }) => ({
 
@@ -32,6 +34,13 @@ const Accordion = styled((props) => (
   }));
   
 const Aside = () => {
+
+
+ const logout = (userToken) => {
+  localStorage.removeItem("token");
+  localStorage.removeItem('state');
+   };
+
 
     const [expanded, setExpanded] = React.useState('panel1');
 
@@ -64,7 +73,7 @@ const Aside = () => {
                     <li>FAQS</li>
                 </NavLink>
 
-                <NavLink className="mb-5" to="/LogOut">
+                <NavLink onClick={logout}  className="mb-5" to="/">
                     <BiLogOut />
                     <li>Logout</li>
                 </NavLink>
