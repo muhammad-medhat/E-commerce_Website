@@ -30,6 +30,7 @@ const createCoupon = asyncHandler(async (req, res) => {
     max_redemptions,
   });
   await stripe.promotionCodes.create({
+    code: code,
     coupon: coupon.id,
   });
   
