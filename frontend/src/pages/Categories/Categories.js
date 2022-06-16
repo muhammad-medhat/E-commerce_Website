@@ -6,7 +6,7 @@ import { SubHeading } from '../../components';
 const Categories = () => {
     const [category, setCategory] = useState([]);
     console.log(category);
-    useEffect(() => {
+    useEffect(() => {    
         fetch("http://localhost:3001/api/categories")
         .then(res => res.json())
         .then(data => setCategory(data.categories));

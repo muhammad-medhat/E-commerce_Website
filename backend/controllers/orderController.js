@@ -41,6 +41,10 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const getOrder = asyncHandler(async (req, res) => {
   if (exists(req.params.id)) {
     const order = await Order.findById(req.params.id);
+    if (!order) {
+      res.status(400);
+      throw new Error("Order not found");
+    }
     res.status(200).json({
       order,
     });
@@ -62,8 +66,11 @@ const getOrder = asyncHandler(async (req, res) => {
 const archiveOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (exists(id)) {
-    // const order = await Order.findById(id);
-    // const arc = order.archived;
+    const order = await Order.findById(id);
+    if (order.status !== "pending") {
+      res.status(400);
+      throw new Error(`Order is already ${order.status}`);
+    }
 
     Order.updateOne({ _id: id }, { archived: true }, (err) => {
       if (err) {
@@ -92,44 +99,14 @@ const archiveOrder = asyncHandler(async (req, res) => {
  * @access Private user
  */
 const createOrder = asyncHandler(async (req, res) => {
-  console.log("Create order");
-
-  const user = await User.findById(req.user.id);
-  if (!user) {
+  const cart = await Cart.findOne({ user: req.user.id });
+  if (!cart) {
     res.status(400);
-    throw new Error("User not found");
+    throw new Error("Cart is Empty");
   }
-
-  // check if user has pending orders
-  const pendingOrders = await Order.findOne({
-    user: req.user.id,
-    status: "pending",
-  });
-  if (pendingOrders) {
-    //update order to add items from cart
-    const cart = await Cart.findOne({ user: req.user.id }); // find user cart
-    const products = await Product.find({ _id: { $in: cart.items } }); // find products in cart
-    console.log("products", products);
-    // update order to add items in cart
-    const order = await Order.findOneAndUpdate(
-      { user: req.user.id, status: "pending" },
-      {
-        $push: {
-          items: {
-            $each: products,
-          },
-        },
-      }
-    );
-    res.status(200).json({
-      code: res.statusCode,
-      message: "Order Updated",
-    });
-  }
-  const cart = await Cart.findOne({ user: req.user.id }); // find user cart
   const order = await Order.create({
     userId: req.user.id,
-    orderDetails: cart,
+    orderDetails: cart.items,
   });
   res.json({
     code: res.statusCode,
