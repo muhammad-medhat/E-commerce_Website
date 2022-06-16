@@ -32,6 +32,7 @@ const stripeCheckout = asyncHandler(async (req, res) => {
           quantity: item.quantity,
         };
       }),
+      allow_promotion_codes: true,
       success_url: "http://localhost:3000/",
       cancel_url: "http://localhost:3000/",
     });

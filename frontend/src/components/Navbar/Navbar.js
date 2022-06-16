@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {AiOutlineShoppingCart} from 'react-icons/ai'
 import {FaUser} from 'react-icons/fa';
 
@@ -7,9 +7,11 @@ import SearchBar from '../SearchBar/SearchBar';
 
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
+
   
         const state = localStorage.getItem("state");
        
+
 
     return (
         <>

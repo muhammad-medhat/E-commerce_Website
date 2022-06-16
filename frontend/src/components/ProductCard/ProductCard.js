@@ -13,7 +13,7 @@ const ProductCard = ({product}) => {
         setaddToCart(prev => !prev)
     }
 
-    const handleClick = () => {
+    const handleClick = (id) => {
         dispatch(addProductDetails([product]));
     }
 
@@ -21,7 +21,7 @@ const ProductCard = ({product}) => {
         <div className="products__wrapper-items_product col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-4">
             <div className="card" style={{width: "18rem"}}>
                 <Link to="/productDetails">
-                    <img src={product.mainImage} className="card-img-top" alt={product.name} onClick={() => handleClick()}/>
+                    <img src={product.mainImage} className="card-img-top" alt={product.name} onClick={() => handleClick(product._id)}/>
                 </Link>
                 <div className="card-body pt-4 pb-4">
                     <div className="item-info d-flex justify-content-between">

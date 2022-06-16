@@ -14,6 +14,7 @@ const Login = () => {
         setNewUser(!newUser);
         if(!newUser) {setButton("Create Account")}
         else {setButton("Sign In")}
+        setErrorMessage(false);
     };
 
     const logInFunc = (logInRes)=> {
@@ -24,7 +25,7 @@ const Login = () => {
     }
 
     const onChangeHandle = (event) => {
-      if(errorMessage === true) { setErrorMessage(false) }
+      if(errorMessage !== false) { setErrorMessage(false) }
       
       const {name, value} = event.target;
       userData[name] = value ;
@@ -53,7 +54,9 @@ const Login = () => {
         const res = newUser? await allAPIs.register(info) : await await allAPIs.login(info);
         console.log(res)
         res.status === 201 ?  window.location.replace("http://localhost:3000/login")
-        : res.status === 200? logInFunc(res) : setErrorMessage(true)
+        : res.status === 200? logInFunc(res) : setErrorMessage(res.message);
+        console.log(res.message)
+        console.log(errorMessage)
       };
       postLogin();
     };
@@ -64,17 +67,17 @@ return (
       <h2>{Button}</h2>
       
       <div className="info-box">
-        {errorMessage && <h6 className="error-message" >error</h6> }
+        {errorMessage !== false && <h6 className="error-message" >{errorMessage}</h6> }
 
         <form className="info-box" onSubmit={onSubmitHandle}  >
-          <input
+          <input required
           type="email"
           placeholder="email"
           name="0"
           value={userData[0]}
           onChange={onChangeHandle}
           />
-          <input
+          <input required
           type="password"
           placeholder="password"
           name="1"
@@ -84,7 +87,7 @@ return (
           
           { newUser && 
           <div>
-            <input
+            <input required
               type="text"
               placeholder="userName"
               name="2"

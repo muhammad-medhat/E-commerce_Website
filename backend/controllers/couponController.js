@@ -2,15 +2,16 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const Coupon = require("../model/couponModel");
 const Product = require("../model/productModel");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Create Coupon
 // @route   POST /api/coupons/
 // @access  Private
 
 const createCoupon = asyncHandler(async (req, res) => {
-  const { code, description, expiresAt, discount } = req.body;
+  const { code, description, expiresAt, discount, max_redemptions } = req.body;
 
-  if (!code || !description || !expiresAt || !discount) {
+  if (!code || !description || !expiresAt || !discount || !max_redemptions) {
     res.status(400);
     throw new Error("Please add all fields");
   }
@@ -22,22 +23,19 @@ const createCoupon = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("coupon already exists");
   }
-
-  const coupon = await Coupon.create({
+  const coupon = await stripe.coupons.create({
+    percent_off: discount,
+    duration: "once",
+    max_redemptions,
+  });
+  const createdCoupon = await Coupon.create({
     code,
     description,
     expiresAt,
     discount,
   });
-
   if (coupon) {
-    res.status(201).json({
-      id: coupon._id,
-      code: coupon.code,
-      description: coupon.description,
-      expiresAt: coupon.expiresAt,
-      discount: coupon.discount,
-    });
+    res.status(201).json(createdCoupon);
   } else {
     res.status(400);
     throw new Error("Invalid coupon data");
@@ -53,35 +51,4 @@ const viewCoupon = asyncHandler(async (req, res) => {
   res.status(200).json({ coupons });
 });
 
-// @desc    get a Coupons
-// @route   GET /api/coupons/:id
-// @access  Private
-
-const getCoupon = asyncHandler(async (req, res) => {
-  const couponId = req.params.id;
-  const coupon = await Coupon.findById(couponId);
-
-  if (!coupon) {
-    res.status(400);
-    throw new Error(`Coupon doesn't exist`);
-  }
-  if (coupon) {
-    let today = new Date();
-    let dbDate = new Date(coupon.expiresAt);
-
-    if (today.getTime() > dbDate.getTime()) {
-      res.status(400);
-      throw new Error(`Coupon is expired`);
-    }
-    const userId = req.user.id;
-    if (coupon.usersUsed[userId]) {
-      res.status(401);
-      throw new Error(`Coupon has already been used`);
-    }
-    coupon.usersUsed[userId] = true;
-    await coupon.save();
-    res.status(200).json(coupon.discount);
-  }
-});
-
-module.exports = { createCoupon, viewCoupon, getCoupon };
+module.exports = { createCoupon, viewCoupon };

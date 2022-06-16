@@ -1,31 +1,7 @@
 
-.search-page {
-    min-height: 60vh;
-    width: 100vh;
-}
-
-.search-page {
-  padding: 0 10px 20px;
-}
 
 @media (min-width: 600px) {
   .search-page {
     padding: 0 20px 40px;
   }
 }
-.search-results {
-  text-align: center;
-}
-.results-grid {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.results-grid li {
-    padding: 10px 15px;
-    text-align: left;
-  }
