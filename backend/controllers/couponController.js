@@ -63,31 +63,4 @@ const viewCoupon = asyncHandler(async (req, res) => {
 // @route   GET /api/coupons/:id
 // @access  Private
 
-const getCoupon = asyncHandler(async (req, res) => {
-  const couponId = req.params.id;
-  const coupon = await Coupon.findById(couponId);
-
-  if (!coupon) {
-    res.status(400);
-    throw new Error(`Coupon doesn't exist`);
-  }
-  if (coupon) {
-    let today = new Date();
-    let dbDate = new Date(coupon.expiresAt);
-
-    if (today.getTime() > dbDate.getTime()) {
-      res.status(400);
-      throw new Error(`Coupon is expired`);
-    }
-    const userId = req.user.id;
-    if (coupon.usersUsed[userId]) {
-      res.status(401);
-      throw new Error(`Coupon has already been used`);
-    }
-    coupon.usersUsed[userId] = true;
-    await coupon.save();
-    res.status(200).json(coupon.discount);
-  }
-});
-
-module.exports = { createCoupon, viewCoupon, getCoupon };
+module.exports = { createCoupon, viewCoupon };
