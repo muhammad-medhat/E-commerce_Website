@@ -12,9 +12,22 @@
     width: 400px
 }
 
-button.add {
+button.add__cart {
     background-color: var(--button-color);
     border: none;
     padding: 6px 20px;
     border-radius: 4px;
+}
+
+.reviews__container svg{
+    font-size: 25px;
+    color: #E1D95B;
+}
+
+.write__review-button {
+    background-color: var(--button-color);
+    border: none;
+    padding: 6px 20px;
+    border-radius: 4px;
+    margin-top: 25px;
 }
