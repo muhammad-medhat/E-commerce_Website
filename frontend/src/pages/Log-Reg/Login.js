@@ -19,8 +19,14 @@ const Login = () => {
 
     const logInFunc = (logInRes)=> {
 
+      if (logInRes.token===null){
+       localStorage.setItem("state", false)
+        
+    } else {
+       localStorage.setItem("state", true)
+    }
+
       localStorage.setItem("token", logInRes.token);
-      localStorage.setItem("state", true);
        window.location.replace("http://localhost:3000/profile");
     }
 
