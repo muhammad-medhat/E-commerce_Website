@@ -9,7 +9,7 @@ export const fetchAllProducts = createAsyncThunk("allProducts/fetchAllProducts",
 export const productsSlice = createSlice({
     name: 'products',
     initialState: {
-        allProducts: false,
+        allProducts: [],
         selectedProduct: []
     },
     reducers: {
@@ -23,6 +23,7 @@ export const productsSlice = createSlice({
         },
         [fetchAllProducts.fulfilled]: (state, action) => {
             state.allProducts = action.payload
+            console.log(state.allProducts);
         },
         [fetchAllProducts.rejected]: () => {
             console.log("rejected");

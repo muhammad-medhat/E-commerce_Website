@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {AiOutlineShoppingCart} from 'react-icons/ai'
 import {FaUser} from 'react-icons/fa';
 
