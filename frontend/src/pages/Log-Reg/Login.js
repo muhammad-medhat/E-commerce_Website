@@ -14,6 +14,7 @@ const Login = () => {
         setNewUser(!newUser);
         if(!newUser) {setButton("Create Account")}
         else {setButton("Sign In")}
+        setErrorMessage(false);
     };
 
     const logInFunc = (logInRes)=> {
@@ -24,7 +25,7 @@ const Login = () => {
     }
 
     const onChangeHandle = (event) => {
-      if(errorMessage === true) { setErrorMessage(false) }
+      if(errorMessage !== false) { setErrorMessage(false) }
       
       const {name, value} = event.target;
       userData[name] = value ;
