@@ -11,7 +11,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const createCoupon = asyncHandler(async (req, res) => {
   const { code, description, expiresAt, discount, max_redemptions } = req.body;
 
-  if (!code || !description || !expiresAt || !discount) {
+  if (!code || !description || !expiresAt || !discount || !max_redemptions) {
     res.status(400);
     throw new Error("Please add all fields");
   }
@@ -23,25 +23,17 @@ const createCoupon = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("coupon already exists");
   }
-
   const coupon = await stripe.coupons.create({
     percent_off: discount,
     duration: "once",
     max_redemptions,
   });
-
-  const promotionCode = await stripe.promotionCodes.create({
-    coupon: coupon.id,
-    code,
-  });
-
   const createdCoupon = await Coupon.create({
     code,
     description,
     expiresAt,
     discount,
   });
-
   if (coupon) {
     res.status(201).json(createdCoupon);
   } else {
@@ -58,9 +50,5 @@ const viewCoupon = asyncHandler(async (req, res) => {
   const coupons = await Coupon.find();
   res.status(200).json({ coupons });
 });
-
-// @desc    get a Coupons
-// @route   GET /api/coupons/:id
-// @access  Private
 
 module.exports = { createCoupon, viewCoupon };
