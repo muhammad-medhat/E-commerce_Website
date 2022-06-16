@@ -18,10 +18,10 @@ const Login = () => {
     };
 
     const logInFunc = (logInRes)=> {
-      
+
       localStorage.setItem("token", logInRes.token);
       localStorage.setItem("state", true);
-      window.location.replace("http://localhost:3000/profile");
+       window.location.replace("http://localhost:3000/profile");
     }
 
     const onChangeHandle = (event) => {
@@ -48,6 +48,7 @@ const Login = () => {
           email:    userData[0],
           password: userData[1],
         }
+        
       // set login and register post here
       const postLogin = async ()=> {
         const res = newUser? await allAPIs.register(info) : await await allAPIs.login(info);

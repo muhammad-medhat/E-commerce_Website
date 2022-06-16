@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Italiana&display=swap');
+
 aside {
     position: sticky;
     left: 0%;
@@ -39,4 +41,7 @@ aside a:hover {
     background-color: var(--button-color);
     color: var(--black-color);
     padding-left: 30px;
+}
+.down{
+    font-family:  'Italiana';
 }

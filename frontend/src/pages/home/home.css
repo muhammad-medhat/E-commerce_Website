@@ -3,7 +3,7 @@
     background: #FFFDF8;
     font-family: 'Italiana';
 }
-.btn2{
+.btnn{
     position: absolute;
     width: 15%;
     font-size: 2vw;
@@ -16,10 +16,10 @@
     color: #000;
     text-align: center;
     display: inline-block;
-}.btn2:hover{
+}.btnn:hover{
     color: #000;
 }
-.btn3{
+.btnn1{
  
     font-size: 2vw;
     background: #e6dfca;
@@ -28,36 +28,8 @@
     text-decoration: none;
     display: inline-block;
     color: #000;
-}.btn3:hover{
+}.btnn1:hover{
     color: #000;
-}
-
-
-
-.product{
-    
-    font-family: 'Italiana';
-    font-size:5vw;
-
-}
-.card{
-    background: #FFFDF8;
-    border: 0;
-    width: 100%;
-}
-.CImg{
-    border-radius: 40px;
-    width: 100%;
-    height: 100%;
-
-
-}
-.cart{
-    bottom: 0%;
-    font-size: 70%;
-}
-.Title{
-    font-size: 100%;
 }
 
 
@@ -66,12 +38,8 @@
     margin-top: 30px;
   }
   .banner_item {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
+  
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 150px;
@@ -80,8 +48,9 @@
   }
   .banner_category {
     height: 50px;
-    background: #ffffff;
+    background: #d2ccbf;
     min-width: 180px;
+    border-radius: 50px;
     padding-left: 25px;
     padding-right: 25px;
   }
@@ -102,5 +71,5 @@
     transition: color 0.3s ease;
   }
   .banner_category a:hover {
-    color: #b5aec4;
+    color: #6a5534;
   }

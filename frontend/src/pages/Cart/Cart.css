@@ -1,0 +1,145 @@
+
+.Cart{
+position: relative;
+width: 100%;
+height: 1000px;
+background: #FFFDF8;
+}
+.Titel{
+position: absolute;
+width: 223px;
+height: 65px;
+left: 69px;
+font-family: 'Italiana';
+font-style: normal;
+font-weight: 400;
+font-size: 300%;
+line-height: 65px;
+/* identical to box height */
+color: #000000;
+}
+
+.Titel1{
+position: absolute;
+left: 5%;
+top: 10%;
+width: 1%;
+
+font-family: 'Italiana';
+font-size: 120%;
+color: #000000;
+}
+.Titel2{  
+position: absolute;
+left: 50%;
+width: 1%;
+
+top: 10%;
+font-family: 'Italiana';
+font-size: 120%;
+color: #000000;
+}
+
+.Titel3{
+position: absolute;
+left: 65%;
+width: 1%;
+
+top: 10%;
+font-family: 'Italiana';
+font-size: 120%;
+color: #000000;
+    
+}
+.Titel4{
+position: absolute;
+left: 83%;
+top: 10%;
+width: 1%;
+font-family: 'Italiana';
+font-size: 120%;
+color: #000000;
+    
+}
+.Titel6{
+position: absolute;
+height: 47px;
+width: 1%;
+
+left: 50%;
+top: 640px;
+
+font-family: 'Italiana';
+
+font-size: 120%;
+line-height: 47px;
+
+}
+.Titel7{
+    position: absolute;
+width: 1%;
+height: 47px;
+left: 50%;
+top: 713px;
+
+font-family: 'Italiana';
+
+font-size: 120%;
+line-height: 47px;
+
+}
+.Cart__wrapper-Titel3{
+left: 50%;
+top: 785px;
+position: absolute;
+width: 40%;
+height: 1px;
+background-color:#D4D2CC;
+
+}
+.Titel8{
+position: absolute;
+width: 1%;
+
+height: 47px;
+left: 50%;
+top: 814px;
+
+font-family: 'Italiana';
+font-size: 120%;
+
+}
+
+.Cart__wrapper-Titel{
+position: absolute;
+width: 90%;
+height: 1px;
+left: 5%;
+top: 15%;
+background-color:#D4D2CC;
+}
+
+
+.btn1{
+position: absolute;
+width: 150px;
+height: 50px;
+left: 25%;
+top: 900px;
+background: #E7DCCA;
+font-family: 'Italiana';
+font-size: 100%;
+text-align: center;
+border-radius: 50px;
+}
+.btn2{
+position: absolute;
+left: 65%;
+top: 900px;
+width: 150px;
+height: 50px;
+font-family: 'Italiana';
+font-size: 100%;
+text-align: center;
+border-radius: 50px;
+}
