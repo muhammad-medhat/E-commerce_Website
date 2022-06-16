@@ -36,8 +36,8 @@ const Footer = () => (
                 <h5 className="text-uppercase">Get in touch</h5>
                 <ul className="list-unstyled">
                     <li className="icons">
-                    <Link to="/Facebook"> <FaFacebookF /></Link> 
-                    <Link to="/Twitter"> <FaTwitter /></Link>
+                    <Link to="https://www.facebook.com/"> <FaFacebookF /></Link> 
+                    <Link to="https://twitter.com/"> <FaTwitter /></Link>
                     </li>
                     
 

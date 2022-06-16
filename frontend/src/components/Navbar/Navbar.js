@@ -7,12 +7,9 @@ import SearchBar from '../SearchBar/SearchBar';
 
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
-    const [userState, setUserState] = useState(false);
-
-    const userIconStateHandle = () => {
-        let state = localStorage.getItem("state");
-        setUserState(state);
-    }
+  
+        const state = localStorage.getItem("state");
+       
 
     return (
         <>
@@ -36,10 +33,10 @@ const Navbar = ({searchUpdate}) => {
                     </ul>
                 <div className="d-flex icons">
                     <SearchBar searchUpdate={searchUpdate} />
-                    <Link to="/shoppingcart">
+                    <Link to="/cart">
                         <AiOutlineShoppingCart />
                     </Link>
-                    <Link to={userState? "/login" : "/profile"} onClick={userIconStateHandle} >
+                    <Link to={state?   "/profile" : "/login"}  >
                         <FaUser />
                     </Link>
                 </div>
