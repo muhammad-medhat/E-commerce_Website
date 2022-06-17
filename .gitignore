@@ -3,4 +3,5 @@ node_modules
 .gitignore
 notes.md
 admin.txt
+routes.txt
 E-commerce_website.postman_collection.json
