@@ -48,13 +48,10 @@ Run frontend on localhost:3000 -> go to projectDir/frontend
 npm start
 
 ```
-<<<<<<< HEAD
 ## Dev
 
 you can run both servers -> go to root directory
 
 ```
 npm run dev
-``1
-=======
->>>>>>> c130d1215ebe3a5c653df9f9d162b01c3afec215
+``
