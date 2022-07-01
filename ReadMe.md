@@ -22,7 +22,7 @@ create .env file in root directory with the following variables and add your val
 
 ```
 PORT = 3001
-MONGO_URI = mongodb+srv://randname:mpzx17jdN7jf1nTc@randname.w1bm7.mongodb.net/?retryWrites=true&w=majority
+MONGO_URI =
 NODE_ENV = development
 TOKEN_SECRET=
 SMTP_HOST=smtp.gmail.com
@@ -48,6 +48,7 @@ Run frontend on localhost:3000 -> go to projectDir/frontend
 npm start
 
 ```
+
 ## Dev
 
 you can run both servers -> go to root directory
@@ -55,3 +56,4 @@ you can run both servers -> go to root directory
 ```
 npm run dev
 ``
+```
