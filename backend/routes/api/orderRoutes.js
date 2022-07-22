@@ -8,9 +8,8 @@ const {
   archiveOrder,
   getDeliveryTime,
   checkoutOrder,
-} = require("../controllers/orderController");
-const { verifyAuth } = require("../middleware/authMiddleware");
-
+} = require("../../controllers/orderController");
+const { verifyAuth } = require("../../middleware/authMiddleware");
 
 /**
  * @Desc get all Orders for the logged in user
@@ -25,8 +24,6 @@ router.get("/", verifyAuth, getAllOrders);
  * @access Private user
  */
 router.get("/:id", verifyAuth, getOrder);
-
-
 
 /**
  * @Desc Create Order
@@ -61,7 +58,7 @@ router.get("/:id/delivery", verifyAuth, getDeliveryTime);
  * @Desc checkout order
  * @route PUt api/orders/:id/checkout
  * @access Private user
- * @body {  
+ * @body {
  *    shippintAddress
  * }
  *  */

@@ -6,8 +6,8 @@ const {
   getProduct,
   getAllProducts,
   deleteProduct,
-} = require("../controllers/productController");
-const { verifyAdmin } = require("../middleware/authMiddleware");
+} = require("../../controllers/productController");
+const { verifyAdmin } = require("../../middleware/authMiddleware");
 
 /**
  * @Desc get all Products
