@@ -6,9 +6,9 @@ const {
   countOrdersToday,
   numberOfOrders,
   incomeThisWeek,
-} = require("../controllers/statisticsController");
+} = require("../../controllers/statisticsController");
 
-const { verifyAdmin } = require("../middleware/authMiddleware");
+const { verifyAdmin } = require("../../middleware/authMiddleware");
 
 router.get("/active-users", verifyAdmin, countActiveAndDeactivatedUsers);
 router.get("/new-users", verifyAdmin, countNewUsers);

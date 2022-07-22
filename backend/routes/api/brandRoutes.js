@@ -5,9 +5,10 @@ const {
   viewBrands,
   viewBrand,
   deleteBrand,
-  updateBrand,getBrandProducts
-} = require("../controllers/brandController");
-const { verifyAdmin } = require("../middleware/authMiddleware");
+  updateBrand,
+  getBrandProducts,
+} = require("../../controllers/brandController");
+const { verifyAdmin } = require("../../middleware/authMiddleware");
 /**
  * @desc    Create Brand
  * @route   POST /api/brands/
@@ -47,6 +48,6 @@ router.get("/:id", viewBrand);
  * @route   GET /api/brands/:id/products/
  * @access  Public
  */
- router.get("/:id/products", getBrandProducts);
+router.get("/:id/products", getBrandProducts);
 
 module.exports = router;

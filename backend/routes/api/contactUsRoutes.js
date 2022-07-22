@@ -3,9 +3,9 @@ const router = express.Router();
 const {
   customerQuery,
   getAllCustomers,
-  deleteCustomerQuery
-} = require("../controllers/contactUsController");
-const { verifyAdmin } = require("../middleware/authMiddleware");
+  deleteCustomerQuery,
+} = require("../../controllers/contactUsController");
+const { verifyAdmin } = require("../../middleware/authMiddleware");
 
 router.post("/", customerQuery);
 router.get("/", verifyAdmin, getAllCustomers);
