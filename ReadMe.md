@@ -6,14 +6,12 @@ install backend dependencies -> go to root directory
 
 ```
 npm install
-
 ```
 
 install frontend dependencies -> go to projectDir/frontend
 
 ```
 npm install
-
 ```
 
 ## Set Env variables
@@ -39,14 +37,12 @@ Run backend on localhost:3001 -> go to root directory
 
 ```
 npm run server
-
 ```
 
 Run frontend on localhost:3000 -> go to projectDir/frontend
 
 ```
 npm start
-
 ```
 
 ## Dev
@@ -55,5 +51,4 @@ you can run both servers -> go to root directory
 
 ```
 npm run dev
-``
 ```
