@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {AiOutlineUser} from 'react-icons/ai';
 import {MdOutlineDeliveryDining} from 'react-icons/md';
 import {FaQuestionCircle} from 'react-icons/fa';
@@ -10,7 +10,8 @@ import MuiAccordion from '@mui/material/Accordion';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-
+import {useDispatch} from 'react-redux'
+import {logout, reset} from '../../features/slice/auth/authSlice'
 
 import './aside.css'
 
@@ -35,14 +36,17 @@ const Accordion = styled((props) => (
   
 const Aside = () => {
 
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
- const logout = (userToken) => {
-  localStorage.removeItem("token");
-  localStorage.removeItem('state');
+ const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate('/')
    };
 
 
-    const [expanded, setExpanded] = React.useState('panel1');
+  const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -73,7 +77,7 @@ const Aside = () => {
                     <li>FAQS</li>
                 </NavLink>
 
-                <NavLink onClick={logout}  className="mb-5" to="/">
+                <NavLink onClick={onLogout}  className="mb-5" to="/">
                     <BiLogOut />
                     <li>Logout</li>
                 </NavLink>
