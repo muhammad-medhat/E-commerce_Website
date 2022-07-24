@@ -4,15 +4,13 @@ import {FaUser} from 'react-icons/fa';
 
 import { Link, NavLink } from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
+import {useSelector} from 'react-redux'
 
 import './navbar.css';
 const Navbar = ({searchUpdate}) => {
 
-  
-        const state = localStorage.getItem("state");
-       
-
-
+   const {user} = useSelector((state) => state.auth)
+   
     return (
         <>
         <nav className="navbar navbar-expand-lg navbar-light sticky-top">
@@ -38,7 +36,7 @@ const Navbar = ({searchUpdate}) => {
                     <Link to="/cart">
                         <AiOutlineShoppingCart />
                     </Link>
-                    <Link to={state?   "/profile" : "/login"}  >
+                    <Link to={user? "/profile" : "/login"}  >
                         <FaUser />
                     </Link>
                 </div>
