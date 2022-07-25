@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './categories.css';
 import catImg from '../../assets/image.png';
 import hatImg from '../../assets/hat.jpg';
-
+import { SubHeading } from '../../components';
 const Categories = () => {
     const [category, setCategory] = useState([]);
     console.log(category);
-    useEffect(() => {
+    useEffect(() => {    
         fetch("http://localhost:3001/api/categories")
         .then(res => res.json())
         .then(data => setCategory(data.categories));
@@ -14,7 +14,7 @@ const Categories = () => {
     return (
         <div className="category__wrapper">
             <div className="container">
-                <h4 className="category__wrapper_head text-uppercase mb-5">Categories</h4>
+                <SubHeading title="Categories"/>
                 <div className="category__wrapper-women mb-4 pt-2 pb-2">
                     <div className="row">
                         <div className="col-md-12 col-lg-2">

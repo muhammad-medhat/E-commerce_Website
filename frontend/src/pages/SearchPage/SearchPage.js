@@ -1,5 +1,6 @@
 
-import CreateCard from "./../../components/CreateCard/CreateCard";
+
+import ProductCard from "./../../components/ProductCard/ProductCard";
 import "./SearchPage.css"
 
 const SearchPage = ({results}) => {
@@ -7,19 +8,15 @@ const SearchPage = ({results}) => {
   console.log(results)
 
   return (
-    <div className="search-page">
-      <div className="search-advanced" >advanced Search</div>
-
-      <div className="search-results">
-        <ol className="results-grid" >
-          {results.map( (product) =>
-            <CreateCard key={product.id} Product={product} />
-          )}
-        </ol>
-      </div>
-
-      <div className="collapse-button">
-        <button /* onClick={"somefunctionhere"} */ >collapse</button>
+    <div className="search-page products__wrapper ">  {/*  */}
+      <div className="container">
+        <div className="search-results products__wrapper-items pt-3 pb-3 ">   {/*  */}
+          <div className="row">
+            {results && results.map( (product) =>
+              <ProductCard key={product.id} product={product} />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

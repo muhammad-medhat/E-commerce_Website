@@ -19,38 +19,47 @@ const SearchBar = ({searchUpdate}) => {
     setProducts(products);
   };
 
-  const clickHandle = ()=> {
-    if(activeSearch === false) { setActiveSearch(true) }
-    getAllProducts();
+  const clickHandle = (event)=> {
+    if(!activeSearch) { 
+      setActiveSearch(true) 
+      getAllProducts();
+    }
+    else { 
+      if(event.target.name === "collapse") {
+        setActiveSearch(false) 
+        setSearchValue("")
+        searchUpdate([]);
+      }
+      else {
+        let searchResults = products.filter( f => f.name.toLowerCase().includes(searchValue.toLowerCase()) );
+        searchValue? searchUpdate(searchResults) : searchUpdate([]);
+      }
+    }
+    setSearchValue("")
   };
 
   const changeHandle = (event) => { setSearchValue(event.target.value); } ;
   
-  const submitHandle = (event) => {
-    event.preventDefault();
-
-    let searchResults = products.filter( f => f.name.toLowerCase().includes(searchValue.toLowerCase()) );
-    
-    searchUpdate(searchResults);
-    setSearchValue("")
-  };
-
   return (
-    <div>
-      {activeSearch? 
-      <form className='search-input' onSubmit={submitHandle} >
+    <div className='show-flex' >
+      <Link to='./SearchPage' onClick={clickHandle} className='search-icon'  >
+        < AiOutlineSearch />
+      </Link>  
+      
+      <div className='show-flex'>
+        {activeSearch &&
         <input 
           type="text"
           placeholder='looking for?'
           value={searchValue}
           onChange={changeHandle}
-        />
-      </form>
-        : 
-      <Link to='./SearchPage' onClick={clickHandle} >
-        < AiOutlineSearch/>
-      </Link> 
-      }
+        /> 
+        } 
+          
+        {activeSearch &&
+        <button className="collapse-button" onClick={clickHandle} name="collapse" />
+        }
+      </div>
     </div>
   )
 };

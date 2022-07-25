@@ -22,12 +22,12 @@ const Orders = () => {
                     <h1 className='mb-5'>My Orders</h1>
                     <div className="order_wrapper-content_items w-75">
                         <div className="order_wrapper-content_items_product mb-5">
-                            <button class="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderOne" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
+                            <button className="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderOne" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
                                 <p className='m-0'>Order #1232</p>
                                 {clicked ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
                             </button>
-                            <div class="collapse" id="orderOne">
-                                <div class="card card-body">
+                            <div className="collapse" id="orderOne">
+                                <div className="card card-body">
                                     {products.map((product) => (
                                         <div className='product_item d-flex align-items-center justify-content-between w-100' key={product.id}>
                                             <p>{product.name}</p>
@@ -42,12 +42,12 @@ const Orders = () => {
                         </div>
 
                         <div className="order_wrapper-content_items_product mb-5">
-                            <button class="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderTwo" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
+                            <button className="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderTwo" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
                                 <p className='m-0'>Order #1232</p>
                                 {clicked ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
                             </button>
-                            <div class="collapse" id="orderTwo">
-                                <div class="card card-body">
+                            <div className="collapse" id="orderTwo">
+                                <div className="card card-body">
                                     {products.map((product) => (
                                         <div className='product_item d-flex align-items-center justify-content-between w-100' key={product.id}>
                                             <p>{product.name}</p>
@@ -62,12 +62,12 @@ const Orders = () => {
                         </div>
 
                         <div className="order_wrapper-content_items_product">
-                            <button class="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderThree" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
+                            <button className="btn info_button w-100 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#orderThree" aria-expanded="true" aria-controls="collapseExample" onClick={() => handleClick()}>
                                 <p className='m-0'>Order #1232</p>
                                 {clicked ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
                             </button>
-                            <div class="collapse" id="orderThree">
-                                <div class="card card-body">
+                            <div className="collapse" id="orderThree">
+                                <div className="card card-body">
                                     {products.map((product) => (
                                         <div className='product_item d-flex align-items-center justify-content-between w-100' key={product.id}>
                                             <p>{product.name}</p>

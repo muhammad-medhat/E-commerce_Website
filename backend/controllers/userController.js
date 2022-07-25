@@ -4,7 +4,6 @@ const asyncHandler = require("express-async-handler");
 const mongoose = require("mongoose");
 const User = require("../model/userModel");
 
-
 // @desc    user can update its account data
 // @route   PUT /api/users/user
 // @access  Private
@@ -32,68 +31,43 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error("No fields to update");
   }
 
-  if (email) {
-    if (await bcrypt.compare(password, user.password)) {
-      let updatedUser = await User.findByIdAndUpdate(
+  const canUpdateEmailAndPassword = password
+    ? await bcrypt.compare(password, user.password)
+    : false;
+
+  let updatedUser;
+  if (email || newPassword) {
+    if (canUpdateEmailAndPassword) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = newPassword
+        ? await bcrypt.hash(newPassword, salt)
+        : undefined;
+
+      updatedUser = await User.findByIdAndUpdate(
         req.user.id,
-        { email },
+        { email, password: hashedPassword },
         { new: true }
       );
-
-      res.status(200).json({
-        username: updatedUser.username,
-        email: updatedUser.email,
-        age: updatedUser.age,
-        address: updatedUser.address,
-        phone: updatedUser.phone,
-        status: updatedUser.status,
-      });
     } else {
       res.status(400);
       throw new Error("Wrong password");
     }
-  } else if (newPassword) {
-    // Encrypting password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
-    if (await bcrypt.compare(password, user.password)) {
-      let updatedUser = await User.findByIdAndUpdate(
-        req.user.id,
-        {
-          password: hashedPassword,
-        },
-        { new: true }
-      );
-
-      res.status(200).json({
-        username: updatedUser.username,
-        email: updatedUser.email,
-        age: updatedUser.age,
-        address: updatedUser.address,
-        phone: updatedUser.phone,
-        status: updatedUser.status,
-      });
-    } else {
-      res.status(400);
-      throw new Error("Wrong Password");
-    }
-  } else {
-    let updatedUser = await User.findByIdAndUpdate(
-      req.user.id,
-      { username, age, address, phone },
-      { new: true }
-    );
-
-    res.status(200).json({
-      username: updatedUser.username,
-      email: updatedUser.email,
-      age: updatedUser.age,
-      address: updatedUser.address,
-      phone: updatedUser.phone,
-    });
   }
-});
 
+  updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { username, age, address, phone },
+    { new: true }
+  );
+
+  res.status(200).json({
+    username: updatedUser.username,
+    email: updatedUser.email,
+    age: updatedUser.age,
+    address: updatedUser.address,
+    phone: updatedUser.phone,
+  });
+});
 
 // @desc    Register User
 // @route   POST /api/users/register
@@ -139,7 +113,7 @@ const regUser = asyncHandler(async (req, res) => {
       age: user.age,
       address: user.address,
       phone: user.phone,
-      token: generateToken(user._id),  
+      token: generateToken(user._id),
       status: 201,
     });
   } else {
@@ -149,20 +123,20 @@ const regUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET a user
-// @route   GET /api/users/:id
+// @route   GET /api/users/
 // @access  Private
 
 const getUser = asyncHandler(async (req, res) => {
-  const { username, email, phone, address, age } = req.user;
+  const { username, email, phone, address, age, status } = req.user;
   res.status(200).json({
     username,
     email,
     phone,
     address,
     age,
+    status,
   });
 });
-
 
 // @desc    login a user
 // @route   POST /api/users/login
@@ -199,10 +173,9 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400);
-    throw new Error("Invalid credentials");
+    throw new Error("invalid email or password");
   }
 });
-
 
 // @desc    logout a user
 // @route   GET /api/users/logout
